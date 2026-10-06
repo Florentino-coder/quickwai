@@ -17,7 +17,8 @@ if (!fs.existsSync(path.join(userData, 'quickreply.json')) && fs.existsSync(path
 }
 app.setName('QuickWai');
 app.setPath('userData', userData);
-app.setAppUserModelId('com.quickwai.app');
+// Installed copies only: with this ID a development run shows the Electron icon on the taskbar.
+if (app.isPackaged) app.setAppUserModelId('com.quickwai.app');
 
 const installed = require('../package.json').version;
 const updatesDir = path.join(userData, 'updates');
