@@ -1,6 +1,6 @@
 {
   "name": "quickwai",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "QuickWai: quick replies for LINE OA (desktop app + Chrome extension)",
   "main": "desktop/boot.js",

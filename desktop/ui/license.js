@@ -13,7 +13,7 @@ async function activate() {
 }
 
 $('activate').onclick = activate;
-$('quit').onclick = () => qr.quit();
+$('quit').onclick = () => qr.closeLicense();
 $('copyMachine').onclick = async () => {
   await qr.copy($('machine').textContent);
   $('copied').textContent = 'คัดลอกแล้ว';
@@ -28,4 +28,5 @@ $('code').addEventListener('keydown', (event) => {
 qr.licenseInfo().then((info) => {
   $('machine').textContent = info.machineId;
   showError(info.reason);
+  $('quit').textContent = info.locked ? 'ออก' : 'ปิด';
 });

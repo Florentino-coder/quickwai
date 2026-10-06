@@ -14,6 +14,12 @@
     <button id="extStatus" class="pill" title="ดูวิธีติดตั้ง Extension"></button>
   </div>
 
+  <div id="expiryBar" class="banner warn bar" hidden>
+    <span id="expiryText" class="grow"></span>
+    <button id="expiryCopy">คัดลอกรหัสเครื่อง</button>
+    <button id="expiryRenew">ใส่โค้ดใหม่</button>
+  </div>
+
   <header>
     <input id="q" type="search" placeholder="ค้นหา Reply" autofocus>
     <button id="add" class="primary">+ เพิ่ม Reply</button>
@@ -62,7 +68,7 @@
     <h3>สิทธิ์ใช้งาน</h3>
     <div class="rows">
       <span>ผู้ใช้</span><span id="aboutUser"></span><span></span>
-      <span>ใช้ได้ถึง</span><span id="aboutExpiry"></span><span></span>
+      <span>ใช้ได้ถึง</span><span id="aboutExpiry"></span><button id="renewBtn" class="link">ใส่โค้ดใหม่</button>
       <span>รหัสเครื่อง</span><span><kbd id="aboutMachine"></kbd></span><button id="copyMachine" class="link">คัดลอก</button>
     </div>
 
@@ -77,6 +83,7 @@
     <div class="rows">
       <span>เวอร์ชัน</span><span id="aboutVersion"></span><button id="updateBtn" class="link">ตรวจอัปเดต</button>
       <span>Extension</span><span id="aboutExt"></span><button id="guideBtn" class="link">วิธีติดตั้ง</button>
+      <span>เปิดพร้อม Windows</span><label class="check"><input id="startWithWindows" type="checkbox"> <span id="startNote">เปิดเองตอนเข้า Windows และอยู่ใน Tray</span></label><span></span>
       <span>เปิดเมื่อ</span><span id="aboutStarted"></span><span></span>
     </div>
 

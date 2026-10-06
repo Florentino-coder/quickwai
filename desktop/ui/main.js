@@ -69,7 +69,8 @@ function renderStatus(status) {
   const extLabel = status.extConnected ? 'Extension เชื่อมต่อแล้ว' : 'Extension ไม่ได้เชื่อมต่อ';
   pill('extStatus', '● ' + extLabel, status.extConnected ? 'ok' : 'warn');
   pill('guideStatus', '● ' + extLabel, status.extConnected ? 'ok' : 'warn');
-  pill('customer', !status.extConnected ? '' : status.name ? `ลูกค้า: ${status.name}` : 'ไม่พบชื่อในโน๊ต', status.name ? 'info' : 'warn');
+  const customer = !status.extConnected ? '' : status.name ? `ลูกค้า: ${status.name}` : status.noteFound ? 'ไม่พบชื่อในโน๊ต' : 'ไม่พบแถบโน้ต';
+  pill('customer', customer, status.name ? 'info' : 'warn');
 
   $('panelKey').textContent = status.paused ? 'หยุดชั่วคราว' : hotkeyLabel(status.panelHotkey);
 
@@ -81,7 +82,12 @@ function renderStatus(status) {
 
   const expiry = status.license.ok ? new Date(status.license.expiresAt).toLocaleDateString('th-TH', { dateStyle: 'medium' }) : '-';
   const daysLeft = status.license.ok ? Math.floor((status.license.expiresAt - Date.now()) / DAY_MS) : 0;
-  pill('licenseNote', status.license.ok ? `ใช้ได้อีก ${daysLeft} วัน` : '', daysLeft <= 7 ? 'warn' : 'plain');
+  const expiring = status.license.ok && daysLeft <= status.expiryWarnDays;
+  pill('licenseNote', status.license.ok ? `ใช้ได้อีก ${daysLeft} วัน` : '', expiring ? 'warn' : 'plain');
+  $('expiryBar').hidden = !expiring;
+  $('expiryText').textContent = `โค้ดใช้งานจะหมด${daysLeft > 0 ? `ในอีก ${daysLeft} วัน` : 'วันนี้'} ส่งรหัสเครื่อง ${status.machineId} ให้ผู้ดูแลเพื่อต่ออายุ`;
+  $('startWithWindows').checked = status.startWithWindows;
+  $('startNote').textContent = status.installed ? 'เปิดเองตอนเข้า Windows และอยู่ใน Tray' : 'มีผลเมื่อติดตั้งจากไฟล์ Setup';
 
   $('aboutUser').textContent = status.license.name || '-';
   $('aboutExpiry').textContent = status.license.ok ? `${expiry} (เหลือ ${daysLeft} วัน)` : '-';
@@ -182,6 +188,10 @@ $('aboutBtn').onclick = () => $('about').showModal();
 $('licenseNote').onclick = () => $('about').showModal();
 $('closeAbout').onclick = () => $('about').close();
 $('copyMachine').onclick = () => qr.copy($('aboutMachine').textContent);
+$('expiryCopy').onclick = () => qr.copy($('aboutMachine').textContent);
+$('expiryRenew').onclick = () => qr.openLicense();
+$('renewBtn').onclick = () => qr.openLicense();
+$('startWithWindows').onchange = (event) => qr.setSettings({ startWithWindows: event.target.checked });
 $('openData').onclick = () => qr.openDataFolder();
 $('importBtn').onclick = () => qr.importData();
 $('quitBtn').onclick = () => qr.quit();

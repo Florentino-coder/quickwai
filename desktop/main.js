@@ -18,12 +18,16 @@ const VERSION = process.env.QR_VERSION || '0.0.0';
 const UPDATE_CHECK_MS = 24 * 3600000;
 const STALE_MS = 4000;
 const PASTE_GAP_MS = 450;
+const EXPIRY_WARN_DAYS = 7;
+// Windows starts the app with this flag at sign-in; the app then stays in the tray.
+const START_HIDDEN = process.argv.includes('--hidden');
 
 let mainWindow = null;
 let licenseWindow = null;
 let locked = true;
 let licenseState = { ok: false, reason: '' };
 let updateReady = '';
+let startingUp = true;
 let panel = null;
 let tray = null;
 let quitting = false;
@@ -75,6 +79,12 @@ function loadDb() {
     db = SEED;
     saveDb();
   }
+  db.settings = { startWithWindows: true, ...db.settings };
+}
+
+function applyLoginItem() {
+  // Only an installed copy registers itself; a development run would register electron.exe.
+  if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: db.settings.startWithWindows, args: ['--hidden'] });
 }
 
 function saveDb() {
@@ -142,10 +152,24 @@ function applyLicense(result) {
   } else {
     if (licenseWindow) licenseWindow.destroy();
     licenseWindow = null;
-    if (mainWindow) showMainWindow();
+    if (mainWindow && !(startingUp && START_HIDDEN)) showMainWindow();
   }
+  startingUp = false;
   syncPanelHotkey();
   refresh();
+  notifyExpiry();
+}
+
+const daysLeft = () => Math.floor((licenseState.expiresAt - Date.now()) / DAY_MS);
+
+// One Windows notification per day while the code is close to its end.
+function notifyExpiry() {
+  const today = new Date().toDateString();
+  if (!licenseState.ok || daysLeft() > EXPIRY_WARN_DAYS || db.settings.expiryNoticeOn === today) return;
+  db.settings.expiryNoticeOn = today;
+  saveDb();
+  const when = daysLeft() > 0 ? `ในอีก ${daysLeft()} วัน` : 'วันนี้';
+  new Notification({ title: 'QuickWai', body: `โค้ดใช้งานจะหมด${when} ส่งรหัสเครื่อง ${MACHINE_ID} ให้ผู้ดูแลเพื่อต่ออายุ` }).show();
 }
 
 function showLicenseWindow() {
@@ -274,6 +298,9 @@ function status() {
     startedAt,
     license: licenseState,
     machineId: MACHINE_ID,
+    expiryWarnDays: EXPIRY_WARN_DAYS,
+    startWithWindows: db.settings.startWithWindows,
+    installed: app.isPackaged,
     version: VERSION,
     updateReady,
   };
@@ -546,7 +573,15 @@ ipcMain.handle('app:quit', quit);
 ipcMain.handle('update:check', runUpdateCheck);
 ipcMain.handle('data:export', exportData);
 ipcMain.handle('data:import', importData);
-ipcMain.handle('license:info', () => ({ machineId: MACHINE_ID, reason: licenseState.reason }));
+ipcMain.handle('license:info', () => ({ machineId: MACHINE_ID, reason: licenseState.reason, locked }));
+ipcMain.handle('license:open', showLicenseWindow);
+ipcMain.handle('license:close', () => (locked ? quit() : licenseWindow && licenseWindow.close()));
+ipcMain.handle('settings:set', (_event, { startWithWindows }) => {
+  db.settings.startWithWindows = !!startWithWindows;
+  saveDb();
+  applyLoginItem();
+  refresh();
+});
 ipcMain.handle('license:activate', (_event, code) => {
   const result = checkLicense(String(code));
   if (result.ok) applyLicense(result);
@@ -564,6 +599,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('second-instance', showMainWindow);
   app.whenReady().then(() => {
     loadDb();
+    applyLoginItem();
     syncExtension();
     startHelper();
     startServer();
@@ -580,6 +616,7 @@ if (!app.requestSingleInstanceLock()) {
       if (locked) return;
       const result = checkLicense();
       if (!result.ok) applyLicense(result);
+      else notifyExpiry();
     }, 3600000);
   });
   app.on('window-all-closed', () => {});

@@ -41,7 +41,7 @@ function renderBanner(status) {
     banner.textContent = `ลูกค้า: ${status.name}`;
   } else {
     banner.className = 'banner warn';
-    banner.textContent = 'ไม่พบชื่อในโน๊ต';
+    banner.textContent = status.noteFound ? 'ไม่พบชื่อในโน๊ต' : 'ไม่พบแถบโน้ต เปิดแถบโน้ตด้านข้างของแชท';
   }
 }
 

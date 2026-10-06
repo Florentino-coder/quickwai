@@ -1,5 +1,7 @@
 (() => {
-  const NOTE_HEADING = /^(โน้ต|โน๊ต|บันทึก|notes?|ノート)$/i;
+  const NOTE_HEADING = /^(โน้ต|โน๊ต|notes?|memo|ノート)(\s*\d+\s*\/\s*\d+)?$/i;
+  const NOTE_MARKED = '[class*="note" i],[class*="memo" i],[data-testid*="note" i],[aria-label*="note" i],[aria-label*="โน้ต"]';
+  const MAX_NOTE_CHARS = 3000;
   let selector = null;
   let timer = null;
   let debounce = null;
@@ -9,22 +11,43 @@
     if (changes.noteSelector) selector = changes.noteSelector.newValue || null;
   });
 
-  // Returns the note panel text, or null when the panel is not on the page.
-  function noteText() {
-    if (selector) {
-      const found = [...document.querySelectorAll(selector)];
-      return found.length ? found.map((el) => el.innerText).join('\n') : null;
-    }
+  // The place the user picked by hand in the popup.
+  function fromPickedPlace() {
+    if (!selector) return [];
+    const found = [...document.querySelectorAll(selector)];
+    return found.length ? [found.map((el) => el.innerText).join('\n')] : [];
+  }
+
+  // The box around a heading that reads "โน้ต" (or "Notes", "โน้ต 1/1").
+  function fromHeadings() {
+    const texts = [];
     for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,div,span,p,button,label,a')) {
       if (el.children.length || !NOTE_HEADING.test(el.textContent.trim())) continue;
       let box = el;
       for (let i = 0; i < 5 && box.parentElement; i++) {
         box = box.parentElement;
         const text = box.innerText || '';
-        if (text.length > el.textContent.length + 2) return text.length < 3000 ? text : null;
+        if (text.length <= el.textContent.length + 2) continue;
+        if (text.length < MAX_NOTE_CHARS) texts.push(text);
+        break;
       }
     }
-    return null;
+    return texts;
+  }
+
+  // Elements whose class or label names them as a note.
+  function fromMarkedElements() {
+    return [...document.querySelectorAll(NOTE_MARKED)]
+      .map((el) => (el.innerText || '').trim())
+      .filter((text) => text.length > 4 && text.length < MAX_NOTE_CHARS);
+  }
+
+  // Returns the note panel text, or null when the panel is not on the page.
+  // LINE can change its page at any time, so several ways of finding the panel back each other up.
+  // A place that holds a name wins over one that does not.
+  function noteText() {
+    const places = [...fromPickedPlace(), ...fromHeadings(), ...fromMarkedElements()];
+    return places.find((text) => QRExtractName(text)) ?? places[0] ?? null;
   }
 
   function readState() {

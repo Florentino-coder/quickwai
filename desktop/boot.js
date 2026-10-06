@@ -5,7 +5,8 @@ const path = require('path');
 const { isNewer } = require('./version.js');
 
 // The data folder keeps one name whatever the app is called, so a rename never loses data.
-const userData = path.join(app.getPath('appData'), 'QuickWai');
+// QUICKWAI_DATA_DIR lets a development copy run next to the installed app.
+const userData = process.env.QUICKWAI_DATA_DIR || path.join(app.getPath('appData'), 'QuickWai');
 const legacyData = path.join(app.getPath('appData'), 'quickreply');
 if (!fs.existsSync(path.join(userData, 'quickreply.json')) && fs.existsSync(path.join(legacyData, 'quickreply.json'))) {
   fs.mkdirSync(userData, { recursive: true });
