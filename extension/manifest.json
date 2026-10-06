@@ -1,17 +1,38 @@
 {
   "manifest_version": 3,
-  "name": "QuickReply Note Reader",
-  "version": "0.1.0",
-  "description": "อ่านชื่อลูกค้าจากโน้ตใน LINE OA แล้วส่งให้โปรแกรม QuickReply บนเครื่องนี้",
-  "permissions": ["storage"],
-  "host_permissions": ["https://chat.line.biz/*", "http://127.0.0.1:38457/*"],
-  "background": { "service_worker": "background.js" },
+  "name": "QuickWai Note Reader",
+  "version": "0.2.0",
+  "description": "อ่านชื่อลูกค้าจากโน้ตใน LINE OA แล้วส่งให้โปรแกรม QuickWai บนเครื่องนี้",
+  "permissions": [
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://chat.line.biz/*",
+    "http://127.0.0.1:38457/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
-      "matches": ["https://chat.line.biz/*"],
-      "js": ["extract-name.js", "content.js"],
+      "matches": [
+        "https://chat.line.biz/*"
+      ],
+      "js": [
+        "extract-name.js",
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
-  "action": { "default_popup": "popup.html", "default_title": "QuickReply" }
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "QuickWai"
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
 }

@@ -1,5 +1,7 @@
 const { searchReplies, hotkeyLabel, NAME_FIELD } = QRShared;
 const $ = (id) => document.getElementById(id);
+const DAY_MS = 86400000;
+const HOTKEY_HINT = 'ใช้ได้เฉพาะตอนหน้าแชท LINE OA อยู่ด้านหน้า กด Backspace เพื่อลบ';
 
 let replies = [];
 let categories = [];
@@ -14,6 +16,12 @@ function el(tag, props = {}, ...children) {
 
 const fileUrl = (filePath) => 'file:///' + encodeURI(filePath.replace(/\\/g, '/'));
 
+function pill(id, text, tone) {
+  $(id).textContent = text;
+  $(id).className = 'pill ' + tone;
+  $(id).hidden = !text;
+}
+
 // Shows the message with {ชื่อ} highlighted.
 function textPreview(text) {
   const parts = text.split(NAME_FIELD);
@@ -21,10 +29,11 @@ function textPreview(text) {
 }
 
 function renderCategories() {
+  const count = (cat) => replies.filter((r) => !cat || r.category === cat).length;
   $('cats').replaceChildren(
-    ...['', ...categories].map((cat) => el('button', {
+    ...['', ...categories].filter((cat) => !cat || count(cat) || cat === category).map((cat) => el('button', {
       className: 'chip' + (cat === category ? ' on' : ''),
-      textContent: cat || 'ทั้งหมด',
+      textContent: `${cat || 'ทั้งหมด'} ${count(cat)}`,
       onclick: () => { category = cat; render(); },
     })));
 }
@@ -45,34 +54,41 @@ function render() {
     });
     const body = el('div', { className: 'body' },
       el('div', { className: 'name', textContent: reply.name }),
-      el('div', { className: 'text' }, ...textPreview(reply.text)));
+      el('div', { className: 'text' }, ...(reply.text ? textPreview(reply.text) : ['ไม่มีข้อความ'])));
     if (reply.images.length) {
       body.append(el('div', { className: 'thumbs' }, ...reply.images.map((img) => el('img', { src: fileUrl(img.path), title: img.name }))));
     }
+    const meta = [reply.category, reply.images.length ? `${reply.images.length} รูป` : '', reply.usageCount ? `ใช้ ${reply.usageCount} ครั้ง` : ''].filter(Boolean).join(' · ');
+    body.append(el('div', { className: 'meta', textContent: meta }));
     return el('div', { className: 'card', onclick: () => openEditor(reply) },
-      el('kbd', { textContent: reply.hotkey ? hotkeyLabel(reply.hotkey) : 'ไม่มี Hotkey' }), body, star);
+      el('kbd', { className: reply.hotkey ? '' : 'none', textContent: reply.hotkey ? hotkeyLabel(reply.hotkey) : 'ไม่มี Hotkey' }), body, star);
   }));
 }
 
-let updateLabel = '';
-
 function renderStatus(status) {
-  updateLabel = status.updateReady ? `อัปเดต ${status.updateReady} พร้อม เปิดใหม่เพื่อใช้` : `v${status.version}`;
-  $('updateBtn').textContent = updateLabel;
-  const label = status.extConnected ? 'Extension เชื่อมต่อแล้ว' : 'Extension ไม่ได้เชื่อมต่อ';
-  for (const id of ['extStatus', 'guideStatus']) {
-    $(id).textContent = '● ' + label;
-    $(id).className = 'pill ' + (status.extConnected ? 'ok' : 'warn');
-  }
-  const notes = [`เปิดเมื่อ ${status.startedAt}`, status.paused ? 'หยุด Hotkey ชั่วคราว' : `ค้นหาด่วน ${hotkeyLabel(status.panelHotkey)}`];
-  if (status.extConnected) notes.push(status.name ? `ลูกค้า: ${status.name}` : 'ไม่พบชื่อในโน๊ต');
-  if (status.license.ok) {
-    const daysLeft = Math.floor((status.license.expiresAt - Date.now()) / 86400000);
-    notes.push(`ใช้ได้ถึง ${new Date(status.license.expiresAt).toLocaleDateString('th-TH', { dateStyle: 'medium' })} (เหลือ ${daysLeft} วัน)`, `เครื่อง ${status.machineId}`);
-  }
-  if (status.serverError) notes.push(status.serverError);
-  if (status.failedHotkeys.length) notes.push(`Hotkey ใช้ไม่ได้: ${status.failedHotkeys.map(hotkeyLabel).join(', ')}`);
-  $('appStatus').textContent = notes.join(' · ');
+  const extLabel = status.extConnected ? 'Extension เชื่อมต่อแล้ว' : 'Extension ไม่ได้เชื่อมต่อ';
+  pill('extStatus', '● ' + extLabel, status.extConnected ? 'ok' : 'warn');
+  pill('guideStatus', '● ' + extLabel, status.extConnected ? 'ok' : 'warn');
+  pill('customer', !status.extConnected ? '' : status.name ? `ลูกค้า: ${status.name}` : 'ไม่พบชื่อในโน๊ต', status.name ? 'info' : 'warn');
+
+  $('panelKey').textContent = status.paused ? 'หยุดชั่วคราว' : hotkeyLabel(status.panelHotkey);
+
+  const notices = [];
+  if (status.updateReady) notices.push(`อัปเดต ${status.updateReady} พร้อมแล้ว ปิดแล้วเปิดโปรแกรมใหม่เพื่อใช้`);
+  if (status.serverError) notices.push(status.serverError);
+  if (status.failedHotkeys.length) notices.push(`Hotkey ใช้ไม่ได้: ${status.failedHotkeys.map(hotkeyLabel).join(', ')}`);
+  $('notice').textContent = notices.join(' · ');
+
+  const expiry = status.license.ok ? new Date(status.license.expiresAt).toLocaleDateString('th-TH', { dateStyle: 'medium' }) : '-';
+  const daysLeft = status.license.ok ? Math.floor((status.license.expiresAt - Date.now()) / DAY_MS) : 0;
+  pill('licenseNote', status.license.ok ? `ใช้ได้อีก ${daysLeft} วัน` : '', daysLeft <= 7 ? 'warn' : 'plain');
+
+  $('aboutUser').textContent = status.license.name || '-';
+  $('aboutExpiry').textContent = status.license.ok ? `${expiry} (เหลือ ${daysLeft} วัน)` : '-';
+  $('aboutMachine').textContent = status.machineId;
+  $('aboutVersion').textContent = status.version;
+  $('aboutExt').textContent = extLabel.replace('Extension ', '');
+  $('aboutStarted').textContent = status.startedAt;
 }
 
 // ---- editor --------------------------------------------------------------
@@ -86,6 +102,7 @@ function openEditor(reply) {
   $('category').replaceChildren(...categories.map((cat) => el('option', { value: cat, textContent: cat })));
   $('category').value = draft.category;
   $('hotkey').value = hotkeyLabel(draft.hotkey);
+  $('hotkeyHint').textContent = HOTKEY_HINT;
   $('text').value = draft.text;
   $('delete').hidden = !reply;
   renderDraftImages();
@@ -126,7 +143,7 @@ $('hotkey').addEventListener('keydown', (event) => {
   const isFKey = pressed.key.startsWith('F') && pressed.key.length > 1;
   if (pressed.key === 'F12' && !pressed.mods.length) return void (hint.textContent = 'F12 ใช้ไม่ได้ Windows สงวนไว้ เลือกปุ่มอื่น');
   if (!isFKey && !pressed.mods.some((m) => m !== 'Shift')) return void (hint.textContent = 'กดร่วมกับ Ctrl หรือ Alt เช่น Alt + 1');
-  hint.textContent = 'ใช้ได้เฉพาะตอนหน้าแชท LINE OA อยู่ด้านหน้า กด Backspace เพื่อลบ';
+  hint.textContent = HOTKEY_HINT;
   draft.hotkey = pressed.accelerator;
   $('hotkey').value = hotkeyLabel(pressed.accelerator);
 });
@@ -159,25 +176,35 @@ $('cancel').onclick = () => $('editor').close();
 $('add').onclick = () => openEditor(null);
 $('q').oninput = render;
 
+// ---- settings and info ---------------------------------------------------
+
+$('aboutBtn').onclick = () => $('about').showModal();
+$('licenseNote').onclick = () => $('about').showModal();
+$('closeAbout').onclick = () => $('about').close();
+$('copyMachine').onclick = () => qr.copy($('aboutMachine').textContent);
+$('openData').onclick = () => qr.openDataFolder();
+$('importBtn').onclick = () => qr.importData();
+$('quitBtn').onclick = () => qr.quit();
+
+$('exportBtn').onclick = async () => {
+  const done = await qr.exportData();
+  if (done) alert(`ส่งออก ${done.count} Reply แล้ว\n${done.file}`);
+};
+
+$('updateBtn').onclick = async () => {
+  $('updateBtn').textContent = 'กำลังตรวจ...';
+  const result = await qr.checkUpdate();
+  $('updateBtn').textContent = 'ตรวจอัปเดต';
+  if (result.status === 'current') alert('ใช้เวอร์ชันล่าสุดอยู่แล้ว');
+  if (result.status === 'error') alert(`ตรวจอัปเดตไม่ได้: ${result.message}`);
+  if (result.status === 'updated') alert(`อัปเดต ${result.version} พร้อมแล้ว ปิดแล้วเปิดโปรแกรมใหม่เพื่อใช้`);
+};
+
 // ---- extension guide -----------------------------------------------------
 
 const openGuide = () => $('guide').showModal();
 $('extStatus').onclick = openGuide;
 $('guideBtn').onclick = openGuide;
-$('quitBtn').onclick = () => qr.quit();
-$('updateBtn').onclick = async () => {
-  $('updateBtn').textContent = 'กำลังตรวจ...';
-  const result = await qr.checkUpdate();
-  if (result.status === 'current') alert('ใช้เวอร์ชันล่าสุดอยู่แล้ว');
-  if (result.status === 'error') alert(`ตรวจอัปเดตไม่ได้: ${result.message}`);
-  if (result.status === 'updated') alert(`อัปเดต ${result.version} พร้อมแล้ว ปิดแล้วเปิดโปรแกรมใหม่เพื่อใช้`);
-  $('updateBtn').textContent = updateLabel;
-};
-$('importBtn').onclick = () => qr.importData();
-$('exportBtn').onclick = async () => {
-  const done = await qr.exportData();
-  if (done) alert(`ส่งออก ${done.count} Reply แล้ว\n${done.file}`);
-};
 $('closeGuide').onclick = () => $('guide').close();
 $('copyUrl').onclick = () => qr.copy('chrome://extensions');
 $('copyDir').onclick = () => qr.copy($('extDir').textContent);

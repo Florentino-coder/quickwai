@@ -11,7 +11,9 @@ const { needsName, fillName } = require('./ui/shared.js');
 
 const PORT = 38457;
 const PANEL_HOTKEY = 'Control+Space';
-const EXTENSION_DIR = path.join(process.env.QR_BASE_DIR || path.join(__dirname, '..'), 'extension');
+const EXTENSION_SOURCE = path.join(__dirname, '..', 'extension');
+const ASSETS = path.join(__dirname, 'assets');
+const ICON = path.join(ASSETS, 'icon.png');
 const VERSION = process.env.QR_VERSION || '0.0.0';
 const UPDATE_CHECK_MS = 24 * 3600000;
 const STALE_MS = 4000;
@@ -40,6 +42,19 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const dataDir = () => app.getPath('userData');
 const dataFile = () => path.join(dataDir(), 'quickreply.json');
 const imageDir = () => path.join(dataDir(), 'images');
+// Chrome loads the extension from this folder. It keeps one path across app updates.
+const extensionDir = () => path.join(dataDir(), 'extension');
+
+function extensionVersion(dir) {
+  try { return JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8')).version; } catch { return ''; }
+}
+
+// Copies the extension that came with this app version into the folder Chrome loads from.
+// The running extension then sees the new version number and reloads itself.
+function syncExtension() {
+  if (extensionVersion(EXTENSION_SOURCE) === extensionVersion(extensionDir())) return;
+  fs.cpSync(EXTENSION_SOURCE, extensionDir(), { recursive: true });
+}
 
 const SEED = {
   categories: ['ทั่วไป', 'ฝาก', 'ถอน', 'เกม', 'โปรโมชัน', 'บัญชี', 'อื่น ๆ'],
@@ -135,7 +150,7 @@ function applyLicense(result) {
 
 function showLicenseWindow() {
   if (licenseWindow) return licenseWindow.show();
-  licenseWindow = new BrowserWindow({ width: 460, height: 430, resizable: false, title: 'QuickReply', autoHideMenuBar: true, webPreferences });
+  licenseWindow = new BrowserWindow({ width: 460, height: 430, resizable: false, title: 'QuickWai', icon: ICON, autoHideMenuBar: true, webPreferences });
   licenseWindow.loadFile(path.join(__dirname, 'ui', 'license.html'));
   licenseWindow.on('closed', () => {
     licenseWindow = null;
@@ -154,7 +169,7 @@ async function runUpdateCheck() {
   });
   if (result.status === 'updated') {
     updateReady = result.version;
-    new Notification({ title: 'QuickReply', body: `อัปเดต ${result.version} พร้อมแล้ว ปิดแล้วเปิดโปรแกรมใหม่เพื่อใช้` }).show();
+    new Notification({ title: 'QuickWai', body: `อัปเดต ${result.version} พร้อมแล้ว ปิดแล้วเปิดโปรแกรมใหม่เพื่อใช้` }).show();
     refresh();
   }
   return result;
@@ -164,7 +179,7 @@ async function runUpdateCheck() {
 
 async function exportData() {
   const stamp = new Date().toISOString().slice(0, 10);
-  const result = await dialog.showSaveDialog(mainWindow, { defaultPath: `quickreply-${stamp}.qrpack`, filters: [{ name: 'QuickReply', extensions: ['qrpack'] }] });
+  const result = await dialog.showSaveDialog(mainWindow, { defaultPath: `quickreply-${stamp}.qrpack`, filters: [{ name: 'QuickWai', extensions: ['qrpack'] }] });
   if (result.canceled) return null;
   const pack = {
     format: 'quickreply-pack',
@@ -182,14 +197,14 @@ async function exportData() {
 }
 
 async function importData() {
-  const picked = await dialog.showOpenDialog(mainWindow, { properties: ['openFile'], filters: [{ name: 'QuickReply', extensions: ['qrpack'] }] });
+  const picked = await dialog.showOpenDialog(mainWindow, { properties: ['openFile'], filters: [{ name: 'QuickWai', extensions: ['qrpack'] }] });
   if (picked.canceled) return null;
   let pack;
   try {
     pack = JSON.parse(fs.readFileSync(picked.filePaths[0], 'utf8'));
     if (pack.format !== 'quickreply-pack' || !Array.isArray(pack.replies)) throw new Error('format');
   } catch {
-    dialog.showMessageBox(mainWindow, { type: 'error', message: 'ไฟล์นี้ไม่ใช่ไฟล์ QuickReply หรือไฟล์เสีย' });
+    dialog.showMessageBox(mainWindow, { type: 'error', message: 'ไฟล์นี้ไม่ใช่ไฟล์ QuickWai หรือไฟล์เสีย' });
     return null;
   }
   const choice = await dialog.showMessageBox(mainWindow, {
@@ -279,7 +294,7 @@ function startServer() {
     req.on('end', () => {
       try {
         onExtensionState(JSON.parse(body));
-        res.writeHead(204).end();
+        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ extensionVersion: extensionVersion(extensionDir()) }));
       } catch {
         res.writeHead(400).end();
       }
@@ -350,7 +365,7 @@ async function useReply(id, name, imageIds, target) {
 }
 
 function pasteFailed(detail) {
-  new Notification({ title: 'QuickReply: วางไม่สำเร็จ', body: detail || 'กลับไปที่หน้าต่างแชทแล้วลองใหม่' }).show();
+  new Notification({ title: 'QuickWai: วางไม่สำเร็จ', body: detail || 'กลับไปที่หน้าต่างแชทแล้วลองใหม่' }).show();
 }
 
 // ---- hotkeys -------------------------------------------------------------
@@ -392,7 +407,7 @@ function syncPanelHotkey() {
 const webPreferences = { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false };
 
 function createMainWindow() {
-  mainWindow = new BrowserWindow({ width: 760, height: 640, minWidth: 560, minHeight: 420, title: 'QuickReply', autoHideMenuBar: true, show: false, webPreferences });
+  mainWindow = new BrowserWindow({ width: 760, height: 640, minWidth: 560, minHeight: 460, title: 'QuickWai', icon: ICON, autoHideMenuBar: true, show: false, webPreferences });
   mainWindow.loadFile(path.join(__dirname, 'ui', 'main.html'));
   mainWindow.on('close', (event) => {
     if (quitting) return;
@@ -431,20 +446,16 @@ function showMainWindow() {
 }
 
 function trayIcon(connected) {
-  const size = 16;
-  const pixels = Buffer.alloc(size * size * 4);
-  const [b, g, r] = connected ? [0x55, 0xc7, 0x06] : [0x9a, 0x94, 0x8f];
-  for (let i = 0; i < size * size; i++) pixels.set([b, g, r, 0xff], i * 4);
-  return nativeImage.createFromBitmap(pixels, { width: size, height: size });
+  return nativeImage.createFromPath(path.join(ASSETS, connected ? 'tray-on.png' : 'tray-off.png'));
 }
 
 function updateTray(current) {
   tray.setImage(trayIcon(current.extConnected));
-  tray.setToolTip(`QuickReply: ${current.paused ? 'หยุดชั่วคราว' : 'ทำงานอยู่'} · Extension ${current.extConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}`);
+  tray.setToolTip(`QuickWai: ${current.paused ? 'หยุดชั่วคราว' : 'ทำงานอยู่'} · Extension ${current.extConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}`);
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: `Extension: ${current.extConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}`, enabled: false },
     { type: 'separator' },
-    { label: 'เปิด QuickReply', click: showMainWindow },
+    { label: 'เปิด QuickWai', click: showMainWindow },
     { label: 'ค้นหาด่วน', click: () => openPanel({}) },
     { label: 'หยุด Hotkey ชั่วคราว', type: 'checkbox', checked: current.paused, click: (item) => setPaused(item.checked) },
     { type: 'separator' },
@@ -483,7 +494,7 @@ function refresh() {
 
 // ---- IPC -----------------------------------------------------------------
 
-ipcMain.handle('init', () => ({ replies: repliesForUi(), categories: db.categories, status: status(), extensionDir: EXTENSION_DIR }));
+ipcMain.handle('init', () => ({ replies: repliesForUi(), categories: db.categories, status: status(), extensionDir: extensionDir(), dataDir: dataDir() }));
 
 ipcMain.handle('reply:save', (_event, input) => {
   const fields = {
@@ -541,7 +552,8 @@ ipcMain.handle('license:activate', (_event, code) => {
   if (result.ok) applyLicense(result);
   return result;
 });
-ipcMain.handle('ext:openFolder', () => shell.openPath(EXTENSION_DIR));
+ipcMain.handle('ext:openFolder', () => shell.openPath(extensionDir()));
+ipcMain.handle('data:openFolder', () => shell.openPath(dataDir()));
 ipcMain.handle('clip:copy', (_event, text) => clipboard.writeText(String(text)));
 
 // ---- lifecycle -----------------------------------------------------------
@@ -552,6 +564,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('second-instance', showMainWindow);
   app.whenReady().then(() => {
     loadDb();
+    syncExtension();
     startHelper();
     startServer();
     createMainWindow();

@@ -1,8 +1,8 @@
 {
-  "name": "quickreply",
-  "version": "0.1.3",
+  "name": "quickwai",
+  "version": "0.2.0",
   "private": true,
-  "description": "QuickReply prototype: desktop app + Chrome extension for LINE OA",
+  "description": "QuickWai: quick replies for LINE OA (desktop app + Chrome extension)",
   "main": "desktop/boot.js",
   "scripts": {
     "start": "electron .",
@@ -14,8 +14,8 @@
     "electron-builder": "^26.15.3"
   },
   "build": {
-    "appId": "com.quickwai.quickreply",
-    "productName": "QuickReply",
+    "appId": "com.quickwai.app",
+    "productName": "QuickWai",
     "asar": false,
     "files": [
       "desktop/**",
@@ -27,12 +27,13 @@
     },
     "win": {
       "target": "nsis",
-      "signAndEditExecutable": false
+      "icon": "build/icon.ico",
+      "signExecutable": false
     },
     "nsis": {
       "oneClick": true,
       "perMachine": false,
-      "artifactName": "QuickReply-Setup-${version}.exe"
+      "artifactName": "QuickWai-Setup-${version}.exe"
     }
   }
 }

@@ -4,11 +4,24 @@ const fs = require('fs');
 const path = require('path');
 const { isNewer } = require('./version.js');
 
+// The data folder keeps one name whatever the app is called, so a rename never loses data.
+const userData = path.join(app.getPath('appData'), 'QuickWai');
+const legacyData = path.join(app.getPath('appData'), 'quickreply');
+if (!fs.existsSync(path.join(userData, 'quickreply.json')) && fs.existsSync(path.join(legacyData, 'quickreply.json'))) {
+  fs.mkdirSync(userData, { recursive: true });
+  for (const item of ['quickreply.json', 'license.json', 'images']) {
+    const from = path.join(legacyData, item);
+    if (fs.existsSync(from)) fs.cpSync(from, path.join(userData, item), { recursive: true });
+  }
+}
+app.setName('QuickWai');
+app.setPath('userData', userData);
+app.setAppUserModelId('com.quickwai.app');
+
 const installed = require('../package.json').version;
-const updatesDir = path.join(app.getPath('userData'), 'updates');
+const updatesDir = path.join(userData, 'updates');
 const pointer = path.join(updatesDir, 'current.json');
 
-process.env.QR_BASE_DIR = path.join(__dirname, '..');
 process.env.QR_VERSION = installed;
 
 let entry = './main.js';

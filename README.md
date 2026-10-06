@@ -1,4 +1,4 @@
-# QuickReply (prototype)
+# QuickWai
 
 เครื่องมือช่วยแอดมิน LINE OA ตอบลูกค้าด้วยข้อความและรูปที่เตรียมไว้ ประกอบด้วยสองส่วน
 
@@ -75,7 +75,8 @@ node tools/license.js issue --name "สมชาย" --days 30
 node tools/release.js 0.1.2
 ```
 
-อัปเดตแบบนี้ครอบคลุมเฉพาะโฟลเดอร์ `desktop/` ส่วน `extension/` ต้องติดตั้งใหม่เอง
+อัปเดตครอบคลุมทั้ง `desktop/` และ `extension/`
+โปรแกรมคัดลอก extension ชุดใหม่ไปที่ `%APPDATA%QuickWaiextension` แล้ว extension ที่เปิดอยู่ใน Chrome โหลดตัวเองใหม่
 
 ## ไฟล์ติดตั้ง
 
@@ -83,6 +84,23 @@ node tools/release.js 0.1.2
 npm run dist
 ```
 
-ได้ไฟล์ `dist/QuickReply-Setup-<เวอร์ชัน>.exe` ส่งไฟล์นี้ให้พนักงาน ดับเบิลคลิกเพื่อติดตั้ง ไม่ต้องใช้สิทธิ์ admin
+ได้ไฟล์ `dist/QuickWai-Setup-<เวอร์ชัน>.exe` ส่งไฟล์นี้ให้พนักงาน ดับเบิลคลิกเพื่อติดตั้ง ไม่ต้องใช้สิทธิ์ admin
 ไฟล์ไม่มีใบรับรอง code signing Windows SmartScreen จะเตือนตอนเปิด กด "More info" แล้ว "Run anyway"
 โฟลเดอร์ extension อยู่ในตัวโปรแกรมที่ติดตั้ง หน้า "วิธีติดตั้ง Extension" แสดงที่อยู่ให้
+
+## ชุดออกโค้ดสำหรับเจ้าของ
+
+```bash
+node tools/owner-kit.js
+```
+
+สร้างโฟลเดอร์ `owner-kit/` มีหน้าออกโค้ดแบบไฟล์เดียว กุญแจ และคำแนะนำ ใช้บนเครื่องไหนก็ได้โดยไม่ต้องมี Node
+โฟลเดอร์นี้มีกุญแจอยู่ จึงไม่ขึ้น GitHub
+
+## ไอคอน
+
+```bash
+npx electron tools/make-icons.js
+```
+
+แก้รูปใน `tools/make-icons.js` แล้วรันคำสั่งนี้เพื่อสร้างไอคอนทุกขนาดใหม่

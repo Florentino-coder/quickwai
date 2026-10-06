@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('qr', {
   addImages: () => ipcRenderer.invoke('image:add'),
   useReply: (payload) => ipcRenderer.invoke('panel:use', payload),
   hidePanel: () => ipcRenderer.invoke('panel:hide'),
+  openDataFolder: () => ipcRenderer.invoke('data:openFolder'),
   openExtensionFolder: () => ipcRenderer.invoke('ext:openFolder'),
   exportData: () => ipcRenderer.invoke('data:export'),
   importData: () => ipcRenderer.invoke('data:import'),

@@ -1,4 +1,4 @@
-// Owner-only tool. Builds a signed update from the desktop/ folder.
+// Owner-only tool. Builds a signed update from the desktop/ and extension/ folders.
 //   node tools/release.js 0.1.1
 // Then commit and push; running apps pick the update up at their next check.
 const crypto = require('crypto');
@@ -26,7 +26,12 @@ function collect(dir, files = {}) {
   return files;
 }
 
-const bundle = zlib.gzipSync(JSON.stringify({ version, files: collect('desktop') }), { level: 9 });
+// The extension takes the app's version number, so running copies notice the change and reload.
+const manifestFile = path.join(root, 'extension', 'manifest.json');
+const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8'));
+fs.writeFileSync(manifestFile, JSON.stringify({ ...manifest, version }, null, 2) + '\n');
+
+const bundle = zlib.gzipSync(JSON.stringify({ version, files: collect('extension', collect('desktop')) }), { level: 9 });
 const signature = crypto.sign(null, bundle, fs.readFileSync(path.join(root, 'license-private.pem'), 'utf8')).toString('base64');
 const file = `app-${version}.bin`;
 const outDir = path.join(root, 'updates');
