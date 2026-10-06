@@ -1,6 +1,6 @@
 {
   "name": "quickwai",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "QuickWai: quick replies for LINE OA (desktop app + Chrome extension)",
   "main": "desktop/boot.js",
@@ -34,6 +34,8 @@
       "oneClick": true,
       "perMachine": false,
       "artifactName": "QuickWai-Setup-${version}.exe"
-    }
-  }
+    },
+    "copyright": "Florentino356"
+  },
+  "author": "Florentino356"
 }

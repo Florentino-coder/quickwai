@@ -18,6 +18,7 @@ const VERSION = process.env.QR_VERSION || '0.0.0';
 const UPDATE_CHECK_MS = 24 * 3600000;
 const STALE_MS = 4000;
 const PASTE_GAP_MS = 450;
+const WINDOW_TITLE = 'QuickWai - Florentino356';
 const EXPIRY_WARN_DAYS = 7;
 // Windows starts the app with this flag at sign-in; the app then stays in the tray.
 const START_HIDDEN = process.argv.includes('--hidden');
@@ -174,7 +175,7 @@ function notifyExpiry() {
 
 function showLicenseWindow() {
   if (licenseWindow) return licenseWindow.show();
-  licenseWindow = new BrowserWindow({ width: 460, height: 430, resizable: false, title: 'QuickWai', icon: ICON, autoHideMenuBar: true, webPreferences });
+  licenseWindow = new BrowserWindow({ width: 460, height: 500, resizable: false, title: WINDOW_TITLE, icon: ICON, autoHideMenuBar: true, webPreferences });
   licenseWindow.loadFile(path.join(__dirname, 'ui', 'license.html'));
   licenseWindow.on('closed', () => {
     licenseWindow = null;
@@ -434,7 +435,7 @@ function syncPanelHotkey() {
 const webPreferences = { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false };
 
 function createMainWindow() {
-  mainWindow = new BrowserWindow({ width: 760, height: 640, minWidth: 560, minHeight: 460, title: 'QuickWai', icon: ICON, autoHideMenuBar: true, show: false, webPreferences });
+  mainWindow = new BrowserWindow({ width: 760, height: 640, minWidth: 560, minHeight: 460, title: WINDOW_TITLE, icon: ICON, autoHideMenuBar: true, show: false, webPreferences });
   mainWindow.loadFile(path.join(__dirname, 'ui', 'main.html'));
   mainWindow.on('close', (event) => {
     if (quitting) return;
@@ -478,7 +479,7 @@ function trayIcon(connected) {
 
 function updateTray(current) {
   tray.setImage(trayIcon(current.extConnected));
-  tray.setToolTip(`QuickWai: ${current.paused ? 'หยุดชั่วคราว' : 'ทำงานอยู่'} · Extension ${current.extConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}`);
+  tray.setToolTip(`${WINDOW_TITLE}\n${current.paused ? 'หยุดชั่วคราว' : 'ทำงานอยู่'} · Extension ${current.extConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}`);
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: `Extension: ${current.extConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}`, enabled: false },
     { type: 'separator' },
