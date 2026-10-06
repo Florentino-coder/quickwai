@@ -1,6 +1,6 @@
 {
   "name": "quickreply",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "QuickReply prototype: desktop app + Chrome extension for LINE OA",
   "main": "desktop/boot.js",
