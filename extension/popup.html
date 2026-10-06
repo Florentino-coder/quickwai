@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<style>
+  body { width: 300px; margin: 0; padding: 12px; font: 13px/1.5 "Segoe UI", "Leelawadee UI", sans-serif; color: #1f2933; }
+  h1 { font-size: 14px; margin: 0 0 8px; }
+  .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid #e5e7eb; }
+  .ok { color: #0a7d3c; } .bad { color: #b45309; }
+  pre { background: #f3f4f6; padding: 8px; border-radius: 6px; white-space: pre-wrap; word-break: break-word; max-height: 120px; overflow: auto; margin: 8px 0; }
+  button { font: inherit; padding: 6px 10px; border: 1px solid #cbd2d9; border-radius: 6px; background: #fff; cursor: pointer; }
+  .actions { display: flex; gap: 8px; }
+</style>
+</head>
+<body>
+  <h1>QuickReply Note Reader</h1>
+  <div class="row"><span>โปรแกรม QuickReply</span><span id="desktop"></span></div>
+  <div class="row"><span>แถบโน้ต</span><span id="note"></span></div>
+  <div class="row"><span>ชื่อลูกค้า</span><span id="name"></span></div>
+  <pre id="text"></pre>
+  <div class="actions">
+    <button id="pick">เลือกแถบโน้ตเอง</button>
+    <button id="reset">ล้างค่าที่เลือก</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

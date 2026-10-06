@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>QuickReply</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="step">
+    <h2 style="margin:0">ใส่โค้ดใช้งาน</h2>
+    <span class="muted">ขอโค้ดจากผู้ดูแล ถ้าผู้ดูแลถามรหัสเครื่อง ส่งรหัสด้านล่างให้</span>
+    <div>รหัสเครื่อง <kbd id="machine"></kbd> <button id="copyMachine" class="link">คัดลอก</button></div>
+    <textarea id="code" placeholder="QR1...." style="min-height:120px" autofocus></textarea>
+    <div id="error" class="banner warn" hidden></div>
+    <div class="actions">
+      <button id="quit">ออก</button>
+      <span class="grow"></span>
+      <button id="activate" class="primary">เริ่มใช้งาน</button>
+    </div>
+  </div>
+  <script src="license.js"></script>
+</body>
+</html>

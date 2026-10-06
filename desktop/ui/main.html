@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>QuickReply</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <input id="q" type="search" placeholder="ค้นหา Reply" autofocus>
+    <button id="importBtn" title="นำเข้าชุด Reply จากไฟล์ .qrpack">นำเข้า</button>
+    <button id="exportBtn" title="ส่งออกชุด Reply ทั้งหมดเป็นไฟล์เดียว ส่งต่อให้คนอื่นได้">ส่งออก</button>
+    <button id="add" class="primary">+ เพิ่ม Reply</button>
+  </header>
+  <div id="cats"></div>
+  <main id="list"></main>
+  <footer>
+    <button id="extStatus" class="pill" title="ดูวิธีติดตั้ง Extension"></button>
+    <span id="appStatus" class="grow"></span>
+    <button id="updateBtn" class="link" title="ตรวจอัปเดต"></button>
+    <button id="guideBtn" class="link">วิธีติดตั้ง Extension</button>
+    <button id="quitBtn" class="link" title="ปิดหน้าต่างด้วย X โปรแกรมยังทำงานอยู่ใน Tray">ออกจากโปรแกรม</button>
+  </footer>
+
+  <dialog id="editor">
+    <h2 id="editorTitle"></h2>
+    <label for="name">ชื่อ Reply</label>
+    <input id="name" placeholder="วิธีฝากเงิน">
+    <div class="cols">
+      <div>
+        <label for="category">หมวด</label>
+        <select id="category"></select>
+      </div>
+      <div>
+        <label for="hotkey">Hotkey</label>
+        <input id="hotkey" readonly placeholder="คลิกแล้วกดปุ่มที่ต้องการ">
+      </div>
+    </div>
+    <div id="hotkeyHint" class="muted">ใช้ได้เฉพาะตอนหน้าแชท LINE OA อยู่ด้านหน้า กด Backspace เพื่อลบ</div>
+    <label for="text">ข้อความ</label>
+    <textarea id="text" placeholder="สวัสดีครับคุณ {ชื่อ} ..."></textarea>
+    <div class="muted">ใส่ <span class="field">{ชื่อ}</span> ตรงที่ต้องการชื่อลูกค้า <button id="insertName" class="link">แทรก {ชื่อ}</button></div>
+    <label>รูป</label>
+    <div class="thumbs" id="images"></div>
+    <div class="actions">
+      <button id="delete">ลบ</button>
+      <span class="grow"></span>
+      <button id="cancel">ยกเลิก</button>
+      <button id="save" class="primary">บันทึก</button>
+    </div>
+  </dialog>
+
+  <dialog id="guide">
+    <h2>ติดตั้ง Extension ใน Chrome</h2>
+    <p><span id="guideStatus" class="pill"></span></p>
+    <ol>
+      <li>เปิด Chrome แล้ววาง <code>chrome://extensions</code> ในช่องที่อยู่ <button id="copyUrl" class="link">คัดลอก</button></li>
+      <li>เปิดสวิตช์ <b>โหมดนักพัฒนาซอฟต์แวร์</b> (Developer mode) มุมขวาบน</li>
+      <li>กด <b>โหลดส่วนขยายที่คลายการแพคแล้ว</b> (Load unpacked) แล้วเลือกโฟลเดอร์นี้<br><code id="extDir"></code> <button id="copyDir" class="link">คัดลอก</button> <button id="openDir" class="link">เปิดโฟลเดอร์</button></li>
+      <li>เปิดหรือรีเฟรชหน้า <code>chat.line.biz</code> แล้วเปิดแถบโน้ตด้านข้างของแชท</li>
+      <li>สถานะด้านบนต้องเปลี่ยนเป็น "Extension เชื่อมต่อแล้ว"</li>
+    </ol>
+    <p class="muted"><b>ใช้ Chrome ไม่ระบุตัวตน:</b> ในหน้า chrome://extensions กด "รายละเอียด" ของ QuickReply Note Reader แล้วเปิด "อนุญาตในโหมดไม่ระบุตัวตน"</p>
+    <p class="muted"><b>เชื่อมต่อแล้วแต่ไม่พบชื่อ:</b> กดไอคอน QuickReply บนแถบ Chrome กด "เลือกแถบโน้ตเอง" แล้วคลิกที่แถบโน้ตในหน้าแชท</p>
+    <div class="actions"><span class="grow"></span><button id="closeGuide">ปิด</button></div>
+  </dialog>
+
+  <script src="shared.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

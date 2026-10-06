@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>ออกโค้ด QuickReply</title>
+<style>
+  body { max-width: 520px; margin: 32px auto; padding: 0 16px; font: 15px/1.5 "Segoe UI", "Leelawadee UI", sans-serif; color: #1f2933; }
+  h1 { font-size: 20px; }
+  label { display: block; margin: 14px 0 4px; font-size: 13px; color: #6b7280; }
+  input, textarea, button { font: inherit; width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #cbd2d9; border-radius: 8px; }
+  button { margin-top: 16px; background: #2563eb; border-color: #2563eb; color: #fff; cursor: pointer; }
+  button.plain { background: #fff; color: #1f2933; border-color: #cbd2d9; }
+  textarea { min-height: 110px; font-family: Consolas, monospace; font-size: 13px; }
+  .note { font-size: 13px; color: #6b7280; }
+  .error { color: #b45309; }
+</style>
+</head>
+<body>
+  <h1>ออกโค้ด QuickReply</h1>
+  <p class="note">หน้านี้ทำงานในเครื่อง ไม่ใช้อินเทอร์เน็ต ไฟล์กุญแจไม่ถูกส่งไปที่ไหน</p>
+
+  <label for="key">ไฟล์กุญแจ (license-private.pem)</label>
+  <input id="key" type="file" accept=".pem">
+
+  <label for="name">ชื่อผู้ใช้</label>
+  <input id="name" placeholder="สมชาย">
+
+  <label for="days">อายุโค้ด (วัน)</label>
+  <input id="days" type="number" min="1" value="30">
+
+  <label for="machine">รหัสเครื่อง (เว้นว่าง = ใช้ได้ทุกเครื่อง)</label>
+  <input id="machine" placeholder="9EB7E824" maxlength="8">
+
+  <button id="make">ออกโค้ด</button>
+  <p id="info" class="note"></p>
+  <textarea id="code" readonly placeholder="โค้ดจะขึ้นตรงนี้"></textarea>
+  <button id="copy" class="plain">คัดลอกโค้ด</button>
+
+  <script src="issuer-core.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const fail = (text) => { $('info').className = 'note error'; $('info').textContent = text; };
+
+    $('make').onclick = async () => {
+      const file = $('key').files[0];
+      const name = $('name').value.trim();
+      const days = Number($('days').value);
+      if (!file) return fail('เลือกไฟล์ license-private.pem ก่อน');
+      if (!name) return fail('ใส่ชื่อผู้ใช้');
+      if (!(days > 0)) return fail('ใส่อายุโค้ดเป็นจำนวนวัน');
+      const expires = new Date();
+      expires.setDate(expires.getDate() + days);
+      expires.setHours(23, 59, 59, 999);
+      try {
+        $('code').value = await QRIssuer.issueCode(await file.text(), { name, expiresAt: expires.getTime(), machine: $('machine').value.trim().toUpperCase() });
+        $('info').className = 'note';
+        $('info').textContent = `ออกให้ ${name} หมดอายุ ${expires.toLocaleDateString('th-TH', { dateStyle: 'long' })}`;
+      } catch {
+        fail('อ่านไฟล์กุญแจไม่ได้ ตรวจว่าเป็น license-private.pem');
+      }
+    };
+
+    $('copy').onclick = () => navigator.clipboard.writeText($('code').value);
+  </script>
+</body>
+</html>

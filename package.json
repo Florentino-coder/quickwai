@@ -1,0 +1,14 @@
+{
+  "name": "quickreply",
+  "version": "0.1.0",
+  "private": true,
+  "description": "QuickReply prototype: desktop app + Chrome extension for LINE OA",
+  "main": "desktop/boot.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "electron": "^44.5.1"
+  }
+}
