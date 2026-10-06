@@ -76,3 +76,13 @@ node tools/release.js 0.1.2
 ```
 
 อัปเดตแบบนี้ครอบคลุมเฉพาะโฟลเดอร์ `desktop/` ส่วน `extension/` ต้องติดตั้งใหม่เอง
+
+## ไฟล์ติดตั้ง
+
+```bash
+npm run dist
+```
+
+ได้ไฟล์ `dist/QuickReply-Setup-<เวอร์ชัน>.exe` ส่งไฟล์นี้ให้พนักงาน ดับเบิลคลิกเพื่อติดตั้ง ไม่ต้องใช้สิทธิ์ admin
+ไฟล์ไม่มีใบรับรอง code signing Windows SmartScreen จะเตือนตอนเปิด กด "More info" แล้ว "Run anyway"
+โฟลเดอร์ extension อยู่ในตัวโปรแกรมที่ติดตั้ง หน้า "วิธีติดตั้ง Extension" แสดงที่อยู่ให้
