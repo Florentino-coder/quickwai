@@ -258,6 +258,7 @@ function status() {
     panelHotkey: PANEL_HOTKEY,
     startedAt,
     license: licenseState,
+    machineId: MACHINE_ID,
     version: VERSION,
     updateReady,
   };

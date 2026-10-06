@@ -36,6 +36,10 @@
   <textarea id="code" readonly placeholder="โค้ดจะขึ้นตรงนี้"></textarea>
   <button id="copy" class="plain">คัดลอกโค้ด</button>
 
+  <h2 style="font-size:16px;margin-top:28px">โค้ดที่ออกไปแล้ว</h2>
+  <p class="note">บันทึกในเบราว์เซอร์ของเครื่องนี้เท่านั้น</p>
+  <table id="history" style="width:100%;border-collapse:collapse;font-size:13px"></table>
+
   <script src="issuer-core.js"></script>
   <script>
     const $ = (id) => document.getElementById(id);
@@ -55,10 +59,32 @@
         $('code').value = await QRIssuer.issueCode(await file.text(), { name, expiresAt: expires.getTime(), machine: $('machine').value.trim().toUpperCase() });
         $('info').className = 'note';
         $('info').textContent = `ออกให้ ${name} หมดอายุ ${expires.toLocaleDateString('th-TH', { dateStyle: 'long' })}`;
+        remember({ name, machine: $('machine').value.trim().toUpperCase() || 'ทุกเครื่อง', expires: expires.getTime(), issued: Date.now() });
       } catch {
         fail('อ่านไฟล์กุญแจไม่ได้ ตรวจว่าเป็น license-private.pem');
       }
     };
+
+    function history() {
+      try { return JSON.parse(localStorage.getItem('qr-issued') || '[]'); } catch { return []; }
+    }
+
+    function remember(entry) {
+      localStorage.setItem('qr-issued', JSON.stringify([entry, ...history()]));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const day = (time) => new Date(time).toLocaleDateString('th-TH', { dateStyle: 'medium' });
+      const rows = [['ออกเมื่อ', 'ชื่อ', 'รหัสเครื่อง', 'หมดอายุ'], ...history().map((e) => [day(e.issued), e.name, e.machine, day(e.expires)])];
+      $('history').replaceChildren(...rows.map((cells, i) => {
+        const tr = document.createElement('tr');
+        tr.append(...cells.map((text) => Object.assign(document.createElement(i ? 'td' : 'th'), { textContent: text, style: 'text-align:left;padding:4px 6px;border-bottom:1px solid #e5e7eb' })));
+        return tr;
+      }));
+    }
+
+    renderHistory();
 
     $('copy').onclick = () => navigator.clipboard.writeText($('code').value);
   </script>

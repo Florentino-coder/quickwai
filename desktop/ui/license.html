@@ -8,9 +8,12 @@
 <body>
   <div class="step">
     <h2 style="margin:0">ใส่โค้ดใช้งาน</h2>
-    <span class="muted">ขอโค้ดจากผู้ดูแล ถ้าผู้ดูแลถามรหัสเครื่อง ส่งรหัสด้านล่างให้</span>
-    <div>รหัสเครื่อง <kbd id="machine"></kbd> <button id="copyMachine" class="link">คัดลอก</button></div>
-    <textarea id="code" placeholder="QR1...." style="min-height:120px" autofocus></textarea>
+    <div class="machine">
+      <span class="muted">1. คัดลอกรหัสเครื่องนี้ ส่งให้ผู้ดูแลพร้อมชื่อของคุณ</span>
+      <div><kbd id="machine"></kbd> <button id="copyMachine">คัดลอกรหัสเครื่อง</button> <span id="copied" class="muted"></span></div>
+    </div>
+    <span class="muted">2. วางโค้ดที่ผู้ดูแลส่งกลับมา</span>
+    <textarea id="code" placeholder="QR1...." style="min-height:100px" autofocus></textarea>
     <div id="error" class="banner warn" hidden></div>
     <div class="actions">
       <button id="quit">ออก</button>

@@ -14,7 +14,10 @@ async function activate() {
 
 $('activate').onclick = activate;
 $('quit').onclick = () => qr.quit();
-$('copyMachine').onclick = () => qr.copy($('machine').textContent);
+$('copyMachine').onclick = async () => {
+  await qr.copy($('machine').textContent);
+  $('copied').textContent = 'คัดลอกแล้ว';
+};
 $('code').addEventListener('keydown', (event) => {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault();

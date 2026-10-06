@@ -8,6 +8,7 @@ const { issue } = require('../desktop/license.js');
 
 const PRIVATE = path.join(__dirname, '..', 'license-private.pem');
 const PUBLIC = path.join(__dirname, '..', 'desktop', 'license-public.pem');
+const ISSUED = path.join(__dirname, '..', 'license-issued.csv');
 const [command, ...rest] = process.argv.slice(2);
 const option = (name) => { const i = rest.indexOf('--' + name); return i >= 0 ? rest[i + 1] : undefined; };
 
@@ -36,6 +37,10 @@ if (command === 'keygen') {
   console.log(`เครื่อง: ${machine || 'ใช้ได้ทุกเครื่อง'}`);
   console.log('');
   console.log(issue(fs.readFileSync(PRIVATE, 'utf8'), { name, expiresAt: expires.getTime(), machine }));
+  // Local record of who got a code; never committed.
+  if (!fs.existsSync(ISSUED)) fs.writeFileSync(ISSUED, '\ufeffออกเมื่อ,ชื่อ,รหัสเครื่อง,หมดอายุ\n');
+  const day = (date) => date.toLocaleDateString('sv-SE');
+  fs.appendFileSync(ISSUED, `${day(new Date())},"${name.replace(/"/g, '""')}",${machine || 'ทุกเครื่อง'},${day(expires)}\n`);
 } else {
   console.error('คำสั่ง: keygen | issue');
   process.exit(1);

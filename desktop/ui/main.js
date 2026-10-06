@@ -68,7 +68,7 @@ function renderStatus(status) {
   if (status.extConnected) notes.push(status.name ? `ลูกค้า: ${status.name}` : 'ไม่พบชื่อในโน๊ต');
   if (status.license.ok) {
     const daysLeft = Math.floor((status.license.expiresAt - Date.now()) / 86400000);
-    notes.push(`ใช้ได้ถึง ${new Date(status.license.expiresAt).toLocaleDateString('th-TH', { dateStyle: 'medium' })} (เหลือ ${daysLeft} วัน)`);
+    notes.push(`ใช้ได้ถึง ${new Date(status.license.expiresAt).toLocaleDateString('th-TH', { dateStyle: 'medium' })} (เหลือ ${daysLeft} วัน)`, `เครื่อง ${status.machineId}`);
   }
   if (status.serverError) notes.push(status.serverError);
   if (status.failedHotkeys.length) notes.push(`Hotkey ใช้ไม่ได้: ${status.failedHotkeys.map(hotkeyLabel).join(', ')}`);
