@@ -75,6 +75,14 @@ const SEED = {
 
 let db = null;
 
+// Every reply holds one or more message sets. text and images mirror the first set for older readers.
+function normalizeReply(reply) {
+  if (!Array.isArray(reply.sets) || !reply.sets.length) reply.sets = [{ id: crypto.randomUUID(), text: reply.text || '', images: reply.images || [] }];
+  reply.text = reply.sets[0].text;
+  reply.images = reply.sets[0].images;
+  return reply;
+}
+
 function loadDb() {
   fs.mkdirSync(imageDir(), { recursive: true });
   try {
@@ -84,6 +92,7 @@ function loadDb() {
     saveDb();
   }
   db.settings = { startWithWindows: true, ...db.settings };
+  db.replies.forEach(normalizeReply);
 }
 
 function applyLoginItem() {
@@ -100,7 +109,11 @@ function saveDb() {
 const imagePath = (image) => path.join(imageDir(), image.file);
 
 function repliesForUi() {
-  return db.replies.map((r) => ({ ...r, images: r.images.map((img) => ({ ...img, path: imagePath(img) })) }));
+  const withPath = (img) => ({ ...img, path: imagePath(img) });
+  return db.replies.map((r) => {
+    const sets = r.sets.map((set) => ({ ...set, images: set.images.map(withPath) }));
+    return { ...r, sets, images: sets[0].images };
+  });
 }
 
 // ---- license -------------------------------------------------------------
@@ -209,6 +222,7 @@ async function exportData() {
   const stamp = new Date().toISOString().slice(0, 10);
   const result = await dialog.showSaveDialog(mainWindow, { defaultPath: `quickreply-${stamp}.qrpack`, filters: [{ name: 'QuickWai', extensions: ['qrpack'] }] });
   if (result.canceled) return null;
+  const withData = (img) => ({ ...img, data: fs.readFileSync(imagePath(img)).toString('base64') });
   const pack = {
     format: 'quickreply-pack',
     version: 1,
@@ -217,7 +231,8 @@ async function exportData() {
       ...r,
       lastUsedAt: 0,
       usageCount: 0,
-      images: r.images.map((img) => ({ ...img, data: fs.readFileSync(imagePath(img)).toString('base64') })),
+      images: r.images.map(withData),
+      sets: r.sets.map((set) => ({ ...set, images: set.images.map(withData) })),
     })),
   };
   fs.writeFileSync(result.filePath, JSON.stringify(pack));
@@ -245,23 +260,26 @@ async function importData() {
   if (choice.response === 2) return null;
   if (choice.response === 1) db.replies = [];
 
+  const readImages = (list) => (list || []).map((img) => {
+    const file = path.basename(String(img.file));
+    fs.writeFileSync(path.join(imageDir(), file), Buffer.from(img.data, 'base64'));
+    return { id: String(img.id), file, name: String(img.name) };
+  });
   for (const incoming of pack.replies) {
-    const images = (incoming.images || []).map((img) => {
-      const file = path.basename(String(img.file));
-      fs.writeFileSync(path.join(imageDir(), file), Buffer.from(img.data, 'base64'));
-      return { id: String(img.id), file, name: String(img.name) };
-    });
-    const reply = {
+    // Packs from before message sets carry one text and one image list.
+    const sets = Array.isArray(incoming.sets) && incoming.sets.length
+      ? incoming.sets.map((set) => ({ id: String(set.id), text: String(set.text || ''), images: readImages(set.images) }))
+      : [{ id: crypto.randomUUID(), text: String(incoming.text || ''), images: readImages(incoming.images) }];
+    const reply = normalizeReply({
       id: String(incoming.id),
       name: String(incoming.name),
       category: String(incoming.category),
       hotkey: String(incoming.hotkey || ''),
-      text: String(incoming.text || ''),
       favorite: !!incoming.favorite,
-      images,
+      sets,
       lastUsedAt: 0,
       usageCount: 0,
-    };
+    });
     if (reply.hotkey) for (const other of db.replies) if (other.id !== reply.id && other.hotkey === reply.hotkey) other.hotkey = '';
     const index = db.replies.findIndex((r) => r.id === reply.id);
     if (index >= 0) db.replies[index] = { ...reply, lastUsedAt: db.replies[index].lastUsedAt, usageCount: db.replies[index].usageCount };
@@ -367,11 +385,12 @@ function askHelper(command) {
 
 // ---- paste ---------------------------------------------------------------
 
-async function useReply(id, name, imageIds, target) {
+async function useReply(id, name, imageIds, target, setId) {
   const reply = db.replies.find((r) => r.id === id);
   if (!reply) return;
-  const text = fillName(reply.text || '', name).trim();
-  const images = reply.images.filter((img) => !imageIds || imageIds.includes(img.id));
+  const set = reply.sets.find((s) => s.id === setId) || reply.sets[0];
+  const text = fillName(set.text || '', name).trim();
+  const images = set.images.filter((img) => !imageIds || imageIds.includes(img.id));
   const before = clipboard.readText();
   let pasted = 0;
 
@@ -406,6 +425,8 @@ async function onReplyHotkey(id) {
   const reply = db.replies.find((r) => r.id === id);
   if (!reply) return;
   const target = await askHelper('fg');
+  // Several message sets: the user picks one from a list first.
+  if (reply.sets.length > 1) return openPanel({ pickFor: id, target });
   // A missing name never blocks the paste; fillName drops the field.
   useReply(id, status().name, null, target);
 }
@@ -448,7 +469,7 @@ function createMainWindow() {
 }
 
 function createPanel() {
-  panel = new BrowserWindow({ width: 440, height: 480, show: false, frame: false, resizable: false, alwaysOnTop: true, skipTaskbar: true, webPreferences });
+  panel = new BrowserWindow({ width: 680, height: 420, show: false, frame: false, resizable: false, alwaysOnTop: true, skipTaskbar: true, webPreferences });
   panel.loadFile(path.join(__dirname, 'ui', 'panel.html'));
   panel.on('blur', () => panel.hide());
   panel.on('close', (event) => {
@@ -458,14 +479,19 @@ function createPanel() {
   });
 }
 
-async function openPanel() {
+// pickFor opens the panel on the message sets of one reply, next to the mouse pointer.
+async function openPanel({ pickFor, target } = {}) {
   if (locked) return;
   if (panel.isVisible()) return panel.hide();
-  panelTarget = await askHelper('fg');
-  const area = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea;
+  panelTarget = target || (await askHelper('fg'));
+  const cursor = screen.getCursorScreenPoint();
+  const area = screen.getDisplayNearestPoint(cursor).workArea;
   const [width, height] = panel.getSize();
-  panel.setPosition(Math.round(area.x + (area.width - width) / 2), Math.round(area.y + (area.height - height) / 3));
-  panel.webContents.send('panel:open', { status: status(), replies: repliesForUi() });
+  const clamp = (value, min, max) => Math.round(Math.max(min, Math.min(value, max)));
+  const x = pickFor ? cursor.x - width / 2 : area.x + (area.width - width) / 2;
+  const y = pickFor ? cursor.y - height / 2 : area.y + (area.height - height) / 3;
+  panel.setPosition(clamp(x, area.x, area.x + area.width - width), clamp(y, area.y, area.y + area.height - height));
+  panel.webContents.send('panel:open', { status: status(), replies: repliesForUi(), pickFor: pickFor || null });
   panel.show();
   panel.focus();
 }
@@ -535,18 +561,20 @@ function refresh() {
 ipcMain.handle('init', () => ({ replies: repliesForUi(), categories: db.categories, status: status(), extensionDir: extensionDir(), dataDir: dataDir() }));
 
 ipcMain.handle('reply:save', (_event, input) => {
+  const cleanImages = (list) => (list || []).map(({ id, file, name }) => ({ id, file, name }));
   const fields = {
     name: String(input.name || '').trim(),
     category: String(input.category || db.categories[0]),
     hotkey: String(input.hotkey || ''),
     text: String(input.text || ''),
     favorite: !!input.favorite,
-    images: (input.images || []).map(({ id, file, name }) => ({ id, file, name })),
+    images: cleanImages(input.images),
+    sets: (input.sets || []).map((set) => ({ id: String(set.id), text: String(set.text || ''), images: cleanImages(set.images) })),
   };
   if (fields.hotkey) for (const other of db.replies) if (other.id !== input.id && other.hotkey === fields.hotkey) other.hotkey = '';
   const existing = db.replies.find((r) => r.id === input.id);
-  if (existing) Object.assign(existing, fields);
-  else db.replies.push({ id: crypto.randomUUID(), lastUsedAt: 0, usageCount: 0, ...fields });
+  if (existing) normalizeReply(Object.assign(existing, fields));
+  else db.replies.push(normalizeReply({ id: crypto.randomUUID(), lastUsedAt: 0, usageCount: 0, ...fields }));
   saveDb();
   sendData();
   refresh();
@@ -573,10 +601,10 @@ ipcMain.handle('image:add', async () => {
   });
 });
 
-ipcMain.handle('panel:use', async (_event, { id, name, imageIds }) => {
+ipcMain.handle('panel:use', async (_event, { id, setId, name, imageIds }) => {
   panel.hide();
   await sleep(60);
-  await useReply(id, String(name || '').trim(), imageIds || null, panelTarget);
+  await useReply(id, String(name || '').trim(), imageIds || null, panelTarget, setId);
 });
 
 ipcMain.handle('panel:hide', () => panel.hide());

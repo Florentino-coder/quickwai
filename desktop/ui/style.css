@@ -48,6 +48,10 @@ dialog textarea { min-height: 90px; resize: vertical; }
 .actions .grow { flex: 1; }
 .thumb { position: relative; }
 .thumb button { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; padding: 0; border-radius: 50%; font-size: 11px; line-height: 1; }
+.set { margin-top: 10px; padding: 8px 10px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.sethead { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; font-size: 13px; }
+.set textarea { display: block; }
+.addset { margin: 10px 0 6px; }
 #hotkey { cursor: pointer; caret-color: transparent; }
 ol { margin: 0; padding-left: 20px; }
 ol li { margin-bottom: 8px; }
@@ -65,6 +69,12 @@ body.panel { background: var(--card); border: 1px solid #b8bec8; overflow: hidde
 .item { display: flex; gap: 10px; align-items: center; padding: 7px 12px; cursor: pointer; }
 .item.on { background: var(--accent-bg); }
 .item .name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.split { flex: 1; display: flex; min-height: 0; }
+.split .side { width: 46%; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.split .side b { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+#setList { flex: 1; overflow: auto; }
+.preview { flex: 1; overflow: auto; padding: 10px 12px; background: #fffbe6; font-size: 13px; }
+.preview .ptext { white-space: pre-wrap; word-break: break-word; }
 .step { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: auto; }
 .pick { display: flex; flex-wrap: wrap; gap: 8px; }
 .pick label { position: relative; cursor: pointer; }

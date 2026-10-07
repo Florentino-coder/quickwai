@@ -18,7 +18,7 @@
       .filter((r) => !category || r.category === category)
       .filter((r) => {
         if (!needles.length) return true;
-        const hay = [r.name, r.text, r.category, r.hotkey].join('\n').toLowerCase();
+        const hay = [r.name, r.text, ...(r.sets || []).map((set) => set.text), r.category, r.hotkey].join('\n').toLowerCase();
         return needles.some((n) => hay.includes(n));
       })
       .sort((a, b) =>
@@ -34,7 +34,7 @@
   // Without a name, "คุณ {ชื่อ}" is removed so the sentence still reads well.
   function fillName(text, name) {
     // A name that carries its own title ("พี่บราวน์") replaces "คุณ" instead of following it.
-    if (name && /^(พี่|น้อง|คุณ)/.test(name)) return text.replace(/คุณ[ \t]*\{ชื่อ\}/g, name).replaceAll(NAME_FIELD, name);
+    if (name && /^(พี่|น้อง|คุณ|เฮีย|เจ๊)/.test(name)) return text.replace(/คุณ[ \t]*\{ชื่อ\}/g, name).replaceAll(NAME_FIELD, name);
     if (name) return text.replaceAll(NAME_FIELD, name);
     return text
       .replace(/(คุณ)?[ \t]*\{ชื่อ\}[ \t]*/g, ' ')

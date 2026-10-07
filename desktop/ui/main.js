@@ -58,7 +58,8 @@ function render() {
     if (reply.images.length) {
       body.append(el('div', { className: 'thumbs' }, ...reply.images.map((img) => el('img', { src: fileUrl(img.path), title: img.name }))));
     }
-    const meta = [reply.category, reply.images.length ? `${reply.images.length} รูป` : '', reply.usageCount ? `ใช้ ${reply.usageCount} ครั้ง` : ''].filter(Boolean).join(' · ');
+    const imageCount = reply.sets.reduce((sum, set) => sum + set.images.length, 0);
+    const meta = [reply.category, reply.sets.length > 1 ? `${reply.sets.length} ชุดข้อความ` : '', imageCount ? `${imageCount} รูป` : '', reply.usageCount ? `ใช้ ${reply.usageCount} ครั้ง` : ''].filter(Boolean).join(' · ');
     body.append(el('div', { className: 'meta', textContent: meta }));
     return el('div', { className: 'card', onclick: () => openEditor(reply) },
       el('kbd', { className: reply.hotkey ? '' : 'none', textContent: reply.hotkey ? hotkeyLabel(reply.hotkey) : 'ไม่มี Hotkey' }), body, star);
@@ -102,29 +103,60 @@ function renderStatus(status) {
 
 // ---- editor --------------------------------------------------------------
 
+const newSet = () => ({ id: crypto.randomUUID(), text: '', images: [] });
+
 function openEditor(reply) {
   draft = reply
-    ? { ...reply, images: [...reply.images] }
-    : { name: '', category: category || categories[0], hotkey: '', text: '', favorite: false, images: [] };
+    ? { ...reply, sets: reply.sets.map((set) => ({ ...set, images: [...set.images] })) }
+    : { name: '', category: category || categories[0], hotkey: '', favorite: false, sets: [newSet()] };
   $('editorTitle').textContent = reply ? 'แก้ไข Reply' : 'เพิ่ม Reply';
   $('name').value = draft.name;
   $('category').replaceChildren(...categories.map((cat) => el('option', { value: cat, textContent: cat })));
   $('category').value = draft.category;
   $('hotkey').value = hotkeyLabel(draft.hotkey);
   $('hotkeyHint').textContent = HOTKEY_HINT;
-  $('text').value = draft.text;
   $('delete').hidden = !reply;
-  renderDraftImages();
+  renderDraftSets();
   $('editor').showModal();
 }
 
-function renderDraftImages() {
-  $('images').replaceChildren(
-    ...draft.images.map((img) => el('div', { className: 'thumb' },
-      el('img', { src: fileUrl(img.path), title: img.name }),
-      el('button', { textContent: '×', title: 'เอารูปออก', onclick: () => { draft.images = draft.images.filter((i) => i.id !== img.id); renderDraftImages(); } }))),
-    el('button', { textContent: '+ เพิ่มรูป', onclick: async () => { draft.images.push(...await qr.addImages()); renderDraftImages(); } }));
+// One box per message set: its text, its images, and buttons to reorder or remove it.
+function renderDraftSets() {
+  const many = draft.sets.length > 1;
+  $('sets').replaceChildren(...draft.sets.map((set, i) => {
+    const box = el('textarea', { value: set.text, placeholder: 'สวัสดีครับคุณ {ชื่อ} ...', oninput: () => { set.text = box.value; } });
+    const move = (step) => { draft.sets.splice(i + step, 0, draft.sets.splice(i, 1)[0]); renderDraftSets(); };
+    const remove = () => {
+      if ((set.text.trim() || set.images.length) && !confirm(`ลบชุดที่ ${i + 1} ใช่ไหม`)) return;
+      draft.sets.splice(i, 1);
+      renderDraftSets();
+    };
+    const insertName = () => {
+      box.setRangeText(NAME_FIELD, box.selectionStart, box.selectionEnd, 'end');
+      set.text = box.value;
+      box.focus();
+    };
+    const head = el('div', { className: 'sethead' },
+      el('b', { textContent: many ? `ชุดที่ ${i + 1}` : 'ข้อความ' }),
+      el('span', { className: 'grow' }),
+      el('button', { className: 'link', textContent: 'แทรก {ชื่อ}', onclick: insertName }),
+      el('button', { className: 'link', textContent: '↑ ขึ้น', hidden: !many || i === 0, onclick: () => move(-1) }),
+      el('button', { className: 'link', textContent: '↓ ลง', hidden: !many || i === draft.sets.length - 1, onclick: () => move(1) }),
+      el('button', { className: 'link', textContent: 'ลบชุด', hidden: !many, onclick: remove }));
+    const images = el('div', { className: 'thumbs' },
+      ...set.images.map((img) => el('div', { className: 'thumb' },
+        el('img', { src: fileUrl(img.path), title: img.name }),
+        el('button', { textContent: '×', title: 'เอารูปออก', onclick: () => { set.images = set.images.filter((other) => other.id !== img.id); renderDraftSets(); } }))),
+      el('button', { textContent: '+ เพิ่มรูป', onclick: async () => { set.images.push(...await qr.addImages()); renderDraftSets(); } }));
+    return el('div', { className: 'set' }, head, box, images);
+  }));
 }
+
+$('addSet').onclick = () => {
+  draft.sets.push(newSet());
+  renderDraftSets();
+  $('sets').lastElementChild.querySelector('textarea').focus();
+};
 
 function acceleratorFrom(event) {
   const code = event.code;
@@ -157,16 +189,9 @@ $('hotkey').addEventListener('keydown', (event) => {
   $('hotkey').value = hotkeyLabel(pressed.accelerator);
 });
 
-$('insertName').onclick = () => {
-  const box = $('text');
-  box.setRangeText(NAME_FIELD, box.selectionStart, box.selectionEnd, 'end');
-  box.focus();
-};
-
 $('save').onclick = async () => {
   draft.name = $('name').value.trim();
   draft.category = $('category').value;
-  draft.text = $('text').value;
   if (!draft.name) return $('name').focus();
   if (draft.hotkey === 'Control+Space') return void ($('hotkeyHint').textContent = 'Ctrl + Space ใช้เปิดค้นหาด่วนอยู่แล้ว เลือกปุ่มอื่น');
   const clash = replies.find((r) => r.id !== draft.id && r.hotkey && r.hotkey === draft.hotkey);
