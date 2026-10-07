@@ -131,11 +131,60 @@
     addEventListener('keydown', key, true);
   }
 
+  // ---- chat box ----------------------------------------------------------
+
+  const EDITABLE = 'textarea,textarea-ex,[contenteditable=""],[contenteditable="true"],[contenteditable="plaintext-only"]';
+  const SEND_HINT = /enter|ส่ง|send|送信/i;
+  let lastChatBox = null;
+
+  const shown = (el) => el.isConnected && el.offsetParent !== null && !el.closest(NOTE_MARKED) && !el.disabled && !el.readOnly;
+  const hintOf = (el) => [el.getAttribute('placeholder'), el.getAttribute('data-placeholder'), el.getAttribute('aria-label')].join(' ');
+
+  // The box where the user types the chat message. LINE can change its page at any time, so three ways back each other up:
+  // a box whose hint names the Enter key, the box the user last typed a chat message in, then the widest box at the bottom.
+  function chatBox() {
+    const boxes = [...document.querySelectorAll(EDITABLE)].filter(shown);
+    const hinted = boxes.find((el) => SEND_HINT.test(hintOf(el)));
+    if (hinted) return hinted;
+    if (lastChatBox && shown(lastChatBox)) return lastChatBox;
+    const wide = boxes.map((el) => ({ el, rect: el.getBoundingClientRect() })).filter(({ rect }) => rect.width > 200);
+    wide.sort((a, b) => b.rect.bottom - a.rect.bottom);
+    return wide[0] ? wide[0].el : null;
+  }
+
+  // Remember the box that sends on Enter: the user pressed Enter in it and it emptied.
+  addEventListener('keydown', (event) => {
+    const el = event.target;
+    if (event.key !== 'Enter' || event.shiftKey || !el.matches?.(EDITABLE) || el.closest(NOTE_MARKED)) return;
+    setTimeout(() => { if (!(el.value ?? el.textContent ?? '').trim()) lastChatBox = el; }, 300);
+  }, true);
+
+  // Puts the text cursor in the chat box, at the end of what is already typed there.
+  function focusChatBox() {
+    const el = chatBox();
+    if (!el) return false;
+    if (document.activeElement !== el) {
+      el.focus();
+      if (el.isContentEditable) {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+      } else if (typeof el.value === 'string') {
+        el.setSelectionRange(el.value.length, el.value.length);
+      }
+    }
+    return document.activeElement === el;
+  }
+
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+    if (msg?.type === 'focusInput') sendResponse({ ok: focusChatBox() });
     if (msg?.type === 'pick') pickNoteArea();
     if (msg?.type === 'debug') {
       const state = readState();
-      sendResponse({ ...state, noteText: (state.noteText || '').slice(0, 300), selector });
+      const box = chatBox();
+      sendResponse({ ...state, noteText: (state.noteText || '').slice(0, 300), selector, chatBox: box ? cssPath(box) : '' });
     }
   });
 

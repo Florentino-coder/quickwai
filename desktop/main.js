@@ -7,6 +7,7 @@ const readline = require('readline');
 const { spawn, execFileSync } = require('child_process');
 const license = require('./license.js');
 const { checkForUpdate } = require('./updater.js');
+const { createChannel } = require('./channel.js');
 const { fillName } = require('./ui/shared.js');
 
 // QUICKWAI_PORT lets a development copy run next to the installed app.
@@ -19,6 +20,7 @@ const VERSION = process.env.QR_VERSION || '0.0.0';
 const UPDATE_CHECK_MS = 24 * 3600000;
 const STALE_MS = 4000;
 const PASTE_GAP_MS = 450;
+const FOCUS_WAIT_MS = 300;
 const WINDOW_TITLE = 'QuickWai - Florentino356';
 const EXPIRY_WARN_DAYS = 7;
 // Windows starts the app with this flag at sign-in; the app then stays in the tray.
@@ -295,7 +297,17 @@ async function importData() {
 // ---- extension link ------------------------------------------------------
 
 const tabs = new Map();
+const channel = createChannel();
 let activeTab = null;
+
+// Asks the extension to put the text cursor in the chat box, so a paste lands there without a click first.
+// Resolves after FOCUS_WAIT_MS at the latest; the paste then goes ahead as before.
+function focusChat() {
+  const key = tabs.has(activeTab) ? activeTab : [...tabs.entries()].sort((a, b) => b[1].at - a[1].at)[0]?.[0];
+  const tabId = Number(String(key || '').split(':')[1]);
+  if (!status().extConnected || !tabId) return Promise.resolve(false);
+  return channel.send({ type: 'focusInput', tabId }, FOCUS_WAIT_MS);
+}
 
 function onExtensionState(state) {
   const key = `${state.incognito ? 'i' : 'n'}:${state.tabId}`;
@@ -332,7 +344,7 @@ function status() {
 function startServer() {
   const server = http.createServer((req, res) => {
     const fromExtension = req.headers['x-quickreply'] === '1' && String(req.headers.origin || '').startsWith('chrome-extension://');
-    if (req.method !== 'POST' || req.url !== '/state' || !fromExtension) {
+    if (req.method !== 'POST' || !['/state', '/wait', '/ack'].includes(req.url) || !fromExtension) {
       res.writeHead(403).end();
       return;
     }
@@ -343,8 +355,16 @@ function startServer() {
     });
     req.on('end', () => {
       try {
-        onExtensionState(JSON.parse(body));
-        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ extensionVersion: extensionVersion(extensionDir()) }));
+        const data = JSON.parse(body || '{}');
+        const json = (payload) => res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(payload));
+        // /wait stays open until the app has a command for the extension.
+        if (req.url === '/wait') return void res.on('close', channel.wait(json));
+        if (req.url === '/ack') {
+          channel.ack(data.n, data.ok);
+          return void json({});
+        }
+        onExtensionState(data);
+        json({ extensionVersion: extensionVersion(extensionDir()) });
       } catch {
         res.writeHead(400).end();
       }
@@ -389,6 +409,7 @@ async function useReply(id, name, imageIds, target, setId) {
   const reply = db.replies.find((r) => r.id === id);
   if (!reply) return;
   const set = reply.sets.find((s) => s.id === setId) || reply.sets[0];
+  await focusChat();
   const text = fillName(set.text || '', name).trim();
   const images = set.images.filter((img) => !imageIds || imageIds.includes(img.id));
   const before = clipboard.readText();
@@ -486,6 +507,9 @@ async function openPanel({ pickFor, target } = {}) {
   if (locked) return;
   if (panel.isVisible()) return panel.hide();
   panelTarget = target || (await askHelper('fg'));
+  // An Alt hotkey is still held here. A window that opens under a held Alt does not get the keyboard,
+  // so wait for the keys to come up first. Ctrl + Space skips this: Ctrl stays down for Ctrl + 1-9.
+  if (pickFor) await askHelper('keysup');
   const cursor = screen.getCursorScreenPoint();
   const area = screen.getDisplayNearestPoint(cursor).workArea;
   const [width, height] = panel.getSize();
@@ -497,6 +521,8 @@ async function openPanel({ pickFor, target } = {}) {
   panel.show();
   panel.focus();
   panel.webContents.focus();
+  const handle = panel.getNativeWindowHandle();
+  await askHelper(`focus ${handle.length >= 8 ? handle.readBigUInt64LE(0) : handle.readUInt32LE(0)}`);
 }
 
 function showMainWindow() {

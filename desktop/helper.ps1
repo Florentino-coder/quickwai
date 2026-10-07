@@ -2,6 +2,8 @@
 #   fg            -> handle of the foreground window
 #   files <b64>   -> "ok" after the files (base64 of UTF-8 paths joined by "|") are on the clipboard
 #   paste <hwnd>  -> "ok" after Ctrl+V was sent to that window, else "fail"
+#   keysup        -> "ok" once no modifier key is held, "fail" after 1.5 seconds
+#   focus <hwnd>  -> "ok" once that window has the keyboard, else "fail"
 Add-Type -ReferencedAssemblies 'System', 'System.Windows.Forms' @"
 using System;
 using System.Runtime.InteropServices;
@@ -49,13 +51,35 @@ public static class QR {
         return false;
     }
 
+    public static bool KeysUp() {
+        for (int i = 0; i < 75 && ModifierDown(); i++) Thread.Sleep(20);
+        return !ModifierDown();
+    }
+
+    // Gives a window the keyboard. Windows refuses this to a process that is not sending input,
+    // so the retries wrap the call in an Alt press. The 0xE8 press stops that Alt from opening a menu.
+    public static bool Focus(long target) {
+        IntPtr h = new IntPtr(target);
+        if (target == 0 || !IsWindow(h)) return false;
+        for (int i = 0; i < 10 && GetForegroundWindow() != h; i++) {
+            if (i > 0) keybd_event(0x12, 0, 0, UIntPtr.Zero);
+            SetForegroundWindow(h);
+            if (i > 0) {
+                keybd_event(0xE8, 0, 0, UIntPtr.Zero);
+                keybd_event(0xE8, 0, KEYUP, UIntPtr.Zero);
+                keybd_event(0x12, 0, KEYUP, UIntPtr.Zero);
+            }
+            Thread.Sleep(30);
+        }
+        return GetForegroundWindow() == h;
+    }
+
     public static bool Paste(long target) {
         IntPtr h = new IntPtr(target);
         if (target == 0 || !IsWindow(h)) return false;
 
         // A held hotkey modifier would turn Ctrl+V into another shortcut.
-        for (int i = 0; i < 75 && ModifierDown(); i++) Thread.Sleep(20);
-        if (ModifierDown()) return false;
+        if (!KeysUp()) return false;
 
         for (int i = 0; i < 25 && GetForegroundWindow() != h; i++) {
             SetForegroundWindow(h);
@@ -81,6 +105,8 @@ while ($null -ne ($line = [Console]::In.ReadLine())) {
             $paths = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($parts[1])).Split('|')
             if ([QR]::SetFiles($paths)) { $result = 'ok' }
         }
+        elseif ($parts[0] -eq 'keysup') { if ([QR]::KeysUp()) { $result = 'ok' } }
+        elseif ($parts[0] -eq 'focus') { if ([QR]::Focus([long]$parts[1])) { $result = 'ok' } }
         elseif ($parts[0] -eq 'paste') { if ([QR]::Paste([long]$parts[1])) { $result = 'ok' } }
     } catch {}
     [Console]::Out.WriteLine($result)

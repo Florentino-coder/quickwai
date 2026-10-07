@@ -1,4 +1,4 @@
-const DESKTOP_URL = 'http://127.0.0.1:38457/state';
+const DESKTOP = 'http://127.0.0.1:38457';
 const CONTENT_SCRIPTS = ['extract-name.js', 'overlay.js', 'content.js'];
 
 function isNewer(a, b) {
@@ -21,13 +21,35 @@ async function reloadIfUpdated(diskVersion) {
   chrome.runtime.reload();
 }
 
+const post = (path, body) => fetch(DESKTOP + path, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'X-QuickReply': '1' },
+  body: JSON.stringify(body),
+});
+
+// The desktop app cannot call the extension. One request stays open, and the app answers it
+// when it has a command. The loop ends when the app is away; the next state message starts it again.
+let polling = false;
+async function pollCommands() {
+  if (polling) return;
+  polling = true;
+  try {
+    for (;;) {
+      const res = await post('/wait', {});
+      if (!res.ok) break;
+      const command = await res.json();
+      if (command.type !== 'focusInput') continue;
+      const ok = await chrome.tabs.sendMessage(command.tabId, { type: 'focusInput' }).then((reply) => !!reply?.ok, () => false);
+      post('/ack', { n: command.n, ok }).catch(() => {});
+    }
+  } catch {}
+  polling = false;
+}
+
 chrome.runtime.onMessage.addListener((msg, sender) => {
   if (msg?.type !== 'state' || !sender.tab) return;
-  fetch(DESKTOP_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-QuickReply': '1' },
-    body: JSON.stringify({ ...msg.state, tabId: sender.tab.id, incognito: sender.tab.incognito }),
-  })
+  pollCommands();
+  post('/state', { ...msg.state, tabId: sender.tab.id, incognito: sender.tab.incognito })
     .then(async (res) => {
       if (res.ok) reloadIfUpdated((await res.json().catch(() => ({}))).extensionVersion);
       return res.ok;
