@@ -68,9 +68,10 @@ function choose(reply, withImagePick) {
   if (reply.sets.length === 1) return chooseSet(reply.sets[0], withImagePick);
   setIndex = 0;
   $('setTitle').textContent = reply.name;
-  $('pq').blur();
   show('set');
   renderSets();
+  // The search box is hidden in this step; the list takes the keyboard instead.
+  $('setList').focus();
 }
 
 // The order of the sets never changes, so each number key always pastes the same set.
@@ -104,7 +105,11 @@ function finish(imageIds) {
   qr.useReply({ id: chosen.id, setId: chosenSet.id, name, imageIds });
 }
 
+// Alt is still down when an Alt hotkey opens the panel. Its default action would take the keyboard away.
+document.addEventListener('keyup', (event) => { if (event.key === 'Alt') event.preventDefault(); });
+
 document.addEventListener('keydown', (event) => {
+  if (event.key === 'Alt') return event.preventDefault();
   if (event.key === 'Escape') return qr.hidePanel();
 
   if (step === 'image') {

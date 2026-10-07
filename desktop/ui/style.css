@@ -72,7 +72,7 @@ body.panel { background: var(--card); border: 1px solid #b8bec8; overflow: hidde
 .split { flex: 1; display: flex; min-height: 0; }
 .split .side { width: 46%; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
 .split .side b { padding: 8px 12px; border-bottom: 1px solid var(--line); }
-#setList { flex: 1; overflow: auto; }
+#setList { flex: 1; overflow: auto; outline: 0; }
 .preview { flex: 1; overflow: auto; padding: 10px 12px; background: #fffbe6; font-size: 13px; }
 .preview .ptext { white-space: pre-wrap; word-break: break-word; }
 .step { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: auto; }

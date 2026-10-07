@@ -470,6 +470,8 @@ function createMainWindow() {
 
 function createPanel() {
   panel = new BrowserWindow({ width: 680, height: 420, show: false, frame: false, resizable: false, alwaysOnTop: true, skipTaskbar: true, webPreferences });
+  // Without this, letting go of Alt after an Alt hotkey moves the keyboard to the hidden window menu.
+  panel.removeMenu();
   panel.loadFile(path.join(__dirname, 'ui', 'panel.html'));
   panel.on('blur', () => panel.hide());
   panel.on('close', (event) => {
@@ -494,6 +496,7 @@ async function openPanel({ pickFor, target } = {}) {
   panel.webContents.send('panel:open', { status: status(), replies: repliesForUi(), pickFor: pickFor || null });
   panel.show();
   panel.focus();
+  panel.webContents.focus();
 }
 
 function showMainWindow() {
