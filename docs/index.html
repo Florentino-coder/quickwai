@@ -72,18 +72,34 @@
     <img src="img/icon.png" alt="">
     <div><h1>คู่มือ QuickWai</h1><span>by Florentino356</span></div>
   </div>
-  <p class="lead">ตอบแชท LINE OA ด้วยข้อความและรูปที่เตรียมไว้ กดปุ่มเดียว ข้อความพร้อมชื่อลูกค้าลงช่องแชทให้ ตั้งค่าครั้งเดียว ใช้เวลาราว 10 นาที</p>
+  <p class="lead">QuickWai ช่วยตอบแชท LINE OA ให้เร็วขึ้น คุณเตรียมข้อความไว้ก่อน ตอนตอบลูกค้า กดปุ่มบนคีย์บอร์ด 1 ครั้ง ข้อความพร้อมชื่อลูกค้าลงช่องแชทให้เอง</p>
+  <p class="lead">ทำตามทีละข้อ จากบนลงล่าง ไม่ต้องรีบ ตั้งค่าครั้งเดียว ราว 10 นาที</p>
   <nav>
     <a href="#video">วิดีโอ</a>
     <a href="#install">1 ติดตั้งโปรแกรม</a>
-    <a href="#extension">2 ติดตั้ง Extension</a>
-    <a href="#use">3 ใช้งาน</a>
+    <a href="#extension">2 ติดตั้งส่วนเสริม</a>
+    <a href="#prepare">3 เตรียมแชท</a>
+    <a href="#reply">4 สร้างข้อความ</a>
+    <a href="#use">5 ตอบลูกค้า</a>
     <a href="#help">แก้ปัญหา</a>
   </nav>
 
+  <section id="words">
+    <h2>คำที่ใช้ในคู่มือนี้</h2>
+    <table>
+      <tr><th>คำ</th><th>หมายถึง</th></tr>
+      <tr><td><b>Reply</b></td><td>ข้อความที่เตรียมไว้ล่วงหน้า เช่น วิธีฝากเงิน</td></tr>
+      <tr><td><b>Hotkey</b></td><td>ปุ่มลัดบนคีย์บอร์ด กดแล้วข้อความออกมา เช่น กด <b class="k">Alt</b> ค้างไว้ แล้วกด <b class="k">1</b></td></tr>
+      <tr><td><b>Extension</b> (ส่วนเสริม)</td><td>ตัวช่วยเล็กๆ ที่ติดใน Chrome ทำหน้าที่อ่านชื่อลูกค้าจากโน้ต</td></tr>
+      <tr><td><b>โน้ต</b></td><td>ช่องจดข้อมูลลูกค้า อยู่ด้านขวาของหน้าแชท LINE OA</td></tr>
+      <tr><td><b>คัดลอก</b> และ <b>วาง</b></td><td>คัดลอก = ให้เครื่องจำข้อความไว้ วาง = กด <b class="k">Ctrl</b> ค้างไว้ แล้วกด <b class="k">V</b> ข้อความที่จำไว้จะออกมา</td></tr>
+      <tr><td><b>ดับเบิลคลิก</b></td><td>กดปุ่มซ้ายของเมาส์ 2 ครั้งเร็วๆ</td></tr>
+    </table>
+  </section>
+
   <section id="video">
     <h2>วิดีโอสอนทุกขั้นตอน</h2>
-    <p class="sub">ดูวิดีโอก่อน แล้วทำตามทีละส่วนด้านล่าง วิดีโอไม่มีเสียง</p>
+    <p class="sub">ดูวิดีโอ 1 รอบก่อน แล้วทำตามทีละส่วนด้านล่าง วิดีโอไม่มีเสียง กดหยุดได้ทุกเมื่อ</p>
     <video src="guide/QuickWai-guide.mp4" controls preload="metadata"></video>
   </section>
 
@@ -92,42 +108,49 @@
     <p class="sub">ทำครั้งเดียวต่อเครื่อง</p>
 
     <div class="step"><div class="num">1</div><div>
-      <p>ดับเบิลคลิกไฟล์ <b class="k">QuickWai-Setup</b> ที่ได้รับ</p>
+      <p>หาไฟล์ชื่อ <b class="k">QuickWai-Setup</b> ที่ผู้ดูแลส่งให้ แล้วดับเบิลคลิกที่ไฟล์</p>
+      <div class="mock" style="max-width:300px"><div class="body row"><img src="img/icon.png" alt="" width="44" height="44"><div><b>QuickWai-Setup</b><br><span style="color:#6b7280">Application</span></div></div></div>
     </div></div>
 
     <div class="step"><div class="num">2</div><div>
-      <p>ถ้า Windows ขึ้นหน้าต่างสีฟ้า กด <b class="btn">More info</b> แล้วกด <b class="btn">Run anyway</b></p>
+      <p>ถ้าขึ้นหน้าต่างสีฟ้าแบบในรูป ไม่ต้องตกใจ</p>
+      <p>กดคำว่า <b class="btn">More info</b> ก่อน แล้วปุ่ม <b class="btn">Run anyway</b> จะขึ้นมา กดปุ่มนั้น</p>
       <div class="mock blue"><div class="body">
         <div style="font-size:17px;margin-bottom:6px">Windows protected your PC</div>
         <div>Microsoft Defender SmartScreen prevented an unrecognized app from starting. <u class="hl">More info</u></div>
         <div style="text-align:right;margin-top:16px"><span class="winbtn hl">Run anyway</span><span class="winbtn">Don't run</span></div>
       </div></div>
-      <div class="note">โปรแกรมป้องกันไวรัสบางตัวอาจเตือนหรือกักไฟล์ ถ้าติดตั้งไม่ได้ ให้แจ้งผู้ดูแล</div>
+      <div class="note">ถ้าโปรแกรมป้องกันไวรัสเตือน หรือไฟล์หายไป ให้หยุด แล้วแจ้งผู้ดูแล</div>
     </div></div>
 
     <div class="step"><div class="num">3</div><div>
-      <p>โปรแกรมเปิดเอง ขึ้นหน้า <b>ใส่โค้ดใช้งาน</b> กด <b class="btn">คัดลอกรหัสเครื่อง</b> แล้วส่งรหัสพร้อมชื่อของคุณให้ผู้ดูแล</p>
+      <p>รอสักครู่ โปรแกรมเปิดเอง และขึ้นหน้า <b>ใส่โค้ดใช้งาน</b></p>
+      <p>กดปุ่ม <b class="btn">คัดลอกรหัสเครื่อง</b> แล้วไปที่ LINE ของผู้ดูแล กด <b class="k">Ctrl</b> + <b class="k">V</b> เพื่อวางรหัส พิมพ์ชื่อของคุณต่อท้าย แล้วส่ง</p>
       <img class="shot small" src="img/license.png" alt="หน้าใส่โค้ดใช้งาน มีรหัสเครื่องและช่องวางโค้ด">
     </div></div>
 
     <div class="step"><div class="num">4</div><div>
-      <p>ผู้ดูแลส่งโค้ดกลับมา วางโค้ดในช่อง แล้วกด <b class="btn">เริ่มใช้งาน</b></p>
-      <p>เข้าโปรแกรมได้แล้ว ป้ายมุมขวาบนยังเป็น "Extension ไม่ได้เชื่อมต่อ" ทำส่วนที่ 2 ต่อ</p>
+      <p>ผู้ดูแลส่งโค้ดยาวๆ กลับมา คัดลอกโค้ดนั้นทั้งหมด</p>
+      <p>กลับมาที่โปรแกรม คลิกในช่องว่าง กด <b class="k">Ctrl</b> + <b class="k">V</b> แล้วกดปุ่ม <b class="btn">เริ่มใช้งาน</b></p>
+      <p>เข้าโปรแกรมได้แล้ว ป้ายมุมขวาบนยังเป็นสีเหลือง "Extension ไม่ได้เชื่อมต่อ" เป็นเรื่องปกติ ทำส่วนที่ 2 ต่อ</p>
       <img class="shot" src="img/main-off.png" alt="หน้าหลักของ QuickWai ป้ายมุมขวาบนขึ้นว่า Extension ไม่ได้เชื่อมต่อ">
     </div></div>
   </section>
 
   <section id="extension">
-    <h2><small>ส่วนที่ 2</small>ติดตั้ง Extension ใน Chrome</h2>
-    <p class="sub">Extension อ่านชื่อลูกค้าจากโน้ตใน LINE OA ติดตั้งครั้งเดียว หลังจากนั้นอัปเดตเอง</p>
+    <h2><small>ส่วนที่ 2</small>ติดตั้งส่วนเสริมใน Chrome</h2>
+    <p class="sub">ส่วนเสริม (Extension) อ่านชื่อลูกค้าจากโน้ต ทำครั้งเดียว หลังจากนั้นอัปเดตเอง</p>
 
     <div class="step"><div class="num">1</div><div>
-      <p>ในโปรแกรม QuickWai กดป้าย <b class="btn">Extension ไม่ได้เชื่อมต่อ</b> มุมขวาบน จะมีหน้าต่างบอกขั้นตอน เปิดค้างไว้</p>
+      <p>ในโปรแกรม QuickWai กดป้ายสีเหลือง <b class="btn">Extension ไม่ได้เชื่อมต่อ</b> ที่มุมขวาบน</p>
+      <p>หน้าต่างบอกขั้นตอนจะขึ้นมา <b>เปิดค้างไว้</b> อย่าปิด เพราะต้องใช้ปุ่มในหน้านี้อีก</p>
       <img class="shot" src="img/ext-guide.png" alt="หน้าต่างบอกขั้นตอนติดตั้ง Extension ในโปรแกรม QuickWai">
     </div></div>
 
     <div class="step"><div class="num">2</div><div>
-      <p>เปิด Chrome พิมพ์ <b class="k">chrome://extensions</b> ในช่องที่อยู่ด้านบน กด Enter แล้วเปิดสวิตช์ <b class="btn">Developer mode</b> มุมขวาบน</p>
+      <p>ในหน้าต่างนั้น ข้อ 1 กดคำว่า <b class="btn">คัดลอก</b></p>
+      <p>เปิด Chrome คลิกช่องที่อยู่เว็บด้านบนสุด กด <b class="k">Ctrl</b> + <b class="k">V</b> แล้วกด <b class="k">Enter</b></p>
+      <p>มองมุมขวาบนของหน้านั้น มีสวิตช์ชื่อ <b class="btn">Developer mode</b> กด 1 ครั้งให้เป็นสีฟ้า</p>
       <div class="mock">
         <div class="bar"><span class="url hl">chrome://extensions</span></div>
         <div class="body row"><b>Extensions</b><span class="grow"></span><span class="hl">Developer mode <span class="toggle"></span></span></div>
@@ -136,7 +159,7 @@
     </div></div>
 
     <div class="step"><div class="num">3</div><div>
-      <p>กดปุ่ม <b class="btn">Load unpacked</b> ที่ขึ้นมาด้านซ้ายบน</p>
+      <p>ปุ่มใหม่ 3 ปุ่มขึ้นมาด้านซ้ายบน กดปุ่มแรก <b class="btn">Load unpacked</b></p>
       <div class="mock"><div class="body row" style="gap:8px">
         <span class="mbtn hl">Load unpacked</span><span class="mbtn">Pack extension</span><span class="mbtn">Update</span>
       </div></div>
@@ -144,125 +167,174 @@
     </div></div>
 
     <div class="step"><div class="num">4</div><div>
-      <p>กลับไปที่หน้าต่างของ QuickWai กด <b class="btn">คัดลอก</b> หลังที่อยู่โฟลเดอร์ในข้อ 3</p>
-      <p>วางในช่องที่อยู่ด้านบนของหน้าต่างเลือกโฟลเดอร์ กด Enter แล้วกด <b class="btn">Select Folder</b></p>
-      <div class="note">ต้องเลือกโฟลเดอร์ชื่อ <b>extension</b> หน้าต่างจะดูว่างเปล่า ถูกแล้ว กด Select Folder ได้เลย ถ้าขึ้น "ไม่สามารถโหลดส่วนขยาย ไฟล์ Manifest หายไป" แปลว่าเลือกผิดโฟลเดอร์ ให้กดยกเลิกแล้วเลือกใหม่</div>
+      <p>หน้าต่างเลือกโฟลเดอร์ขึ้นมา ยังไม่ต้องกดอะไรในนั้น</p>
+      <p>กลับไปที่หน้าต่างของ QuickWai ข้อ 3 กดคำว่า <b class="btn">คัดลอก</b></p>
+      <p>กลับมาที่หน้าต่างเลือกโฟลเดอร์ คลิกช่องยาวด้านบนสุด กด <b class="k">Ctrl</b> + <b class="k">V</b> กด <b class="k">Enter</b> แล้วกดปุ่ม <b class="btn">Select Folder</b></p>
+      <div class="mock"><div class="bar"><span class="url hl">...\AppData\Roaming\QuickWai\extension</span></div><div class="body" style="height:70px;color:#9aa1ab">No items match your search.</div><div class="body row" style="border-top:1px solid #d9dde3"><span class="grow"></span><span class="mbtn hl" style="border-radius:6px">Select Folder</span><span class="mbtn" style="border-radius:6px;color:#1f2933">Cancel</span></div></div>
+      <div class="note">หน้าต่างดูว่างเปล่า ไม่มีไฟล์ให้เห็น <b>ถูกแล้ว</b> กด Select Folder ได้เลย อย่าคลิกเข้าโฟลเดอร์อื่น ถ้าขึ้น "ไฟล์ Manifest หายไป" แปลว่าเลือกผิด กดยกเลิก แล้วทำข้อ 3 ใหม่</div>
     </div></div>
 
     <div class="step"><div class="num">5</div><div>
-      <p>เปิดหน้า LINE OA ถ้าเปิดอยู่แล้วให้กด <b class="k">F5</b> เปิดแชทลูกค้า แล้วเปิดแถบ <b>โน้ต</b> ด้านขวา</p>
-      <p>ป้ายมุมขวาบนของ QuickWai เปลี่ยนเป็นสีเขียว และขึ้นชื่อลูกค้า</p>
-      <img class="shot" src="img/main-on.png" alt="หน้าหลักของ QuickWai ป้ายขึ้นว่า Extension เชื่อมต่อแล้ว และลูกค้า มายด์">
+      <p>เปิดหน้า LINE OA ถ้าเปิดอยู่แล้ว กดปุ่ม <b class="k">F5</b> 1 ครั้ง (อยู่แถวบนสุดของคีย์บอร์ด)</p>
+      <p>เปิดแชทลูกค้า 1 คน ป้ายมุมขวาบนของ QuickWai เปลี่ยนเป็น<b>สีเขียว</b> "Extension เชื่อมต่อแล้ว" เสร็จส่วนที่ 2</p>
+      <img class="shot" src="img/main-on.png" alt="หน้าหลักของ QuickWai ป้ายขึ้นว่า Extension เชื่อมต่อแล้ว และชื่อลูกค้า">
     </div></div>
 
-    <h3>ใช้ Chrome แบบไม่ระบุตัวตน (Incognito)</h3>
-    <p style="margin:0">ในหน้า <b class="k">chrome://extensions</b> กด <b class="btn">Details</b> ของ QuickWai Note Reader แล้วเปิดสวิตช์ <b class="btn">Allow in Incognito</b></p>
+    <h3>ถ้าใช้ Chrome แบบไม่ระบุตัวตน (หน้าต่างสีดำ)</h3>
+    <p style="margin:0">ในหน้า <b class="k">chrome://extensions</b> หากล่องชื่อ QuickWai Note Reader กด <b class="btn">Details</b> เลื่อนลง แล้วเปิดสวิตช์ <b class="btn">Allow in Incognito</b></p>
     <div class="mock"><div class="body">
       <div class="row"><img src="img/icon.png" alt="" width="32" height="32"><div><b>QuickWai Note Reader</b><br><span style="color:#6b7280">อ่านชื่อลูกค้าจากโน้ตใน LINE OA</span></div></div>
       <div class="row" style="margin-top:12px"><span class="mbtn hl">Details</span><span class="mbtn">Remove</span><span class="grow"></span><span class="toggle"></span></div>
     </div></div>
-    <div class="note">Chrome อาจเตือน "Disable developer mode extensions" ตอนเปิด ให้กดกากบาทปิดคำเตือน อย่ากดปิด Extension</div>
+    <div class="note">ตอนเปิด Chrome อาจมีคำเตือน "Disable developer mode extensions" กดกากบาทเพื่อปิดคำเตือน <b>อย่ากดปุ่ม Disable</b> เพราะจะปิดส่วนเสริม</div>
+  </section>
+
+  <section id="prepare">
+    <h2><small>ส่วนที่ 3</small>เตรียมแชทลูกค้า</h2>
+    <p class="sub">ทุกแชทควรมี 2 อย่าง: โน้ตชื่อลูกค้า และแท็ก</p>
+
+    <h3>เขียนชื่อลูกค้าในโน้ต</h3>
+    <p style="margin:0">ที่ด้านขวาของหน้าแชท กดเครื่องหมาย + ของโน้ต แล้วเขียนชื่อที่ใช้เรียกลูกค้า แบบใดแบบหนึ่ง</p>
+    <div class="row" style="align-items:flex-start;flex-wrap:wrap">
+      <div class="mock" style="width:230px"><div class="body">
+        <div class="row"><b>โน้ต 1/1</b><span class="grow"></span><span style="color:#06c755;font-size:18px">+</span></div>
+        <div class="notecard hl">พี่น้ำ</div>
+      </div></div>
+      <div class="mock" style="width:230px"><div class="body">
+        <div class="row"><b>โน้ต 1/1</b><span class="grow"></span><span style="color:#06c755;font-size:18px">+</span></div>
+        <div class="notecard hl">ชื่อ มายด์</div>
+      </div></div>
+    </div>
+    <table style="margin-top:12px">
+      <tr><th>เขียนในโน้ต</th><th>โปรแกรมเรียกลูกค้าว่า</th></tr>
+      <tr><td>พี่น้ำ</td><td>พี่น้ำ</td></tr>
+      <tr><td>ชื่อ มายด์</td><td>มายด์</td></tr>
+      <tr><td>มีทั้ง "พี่น้ำ" และ "ชื่อ มายด์"</td><td>พี่น้ำ (บรรทัด "พี่" มาก่อน)</td></tr>
+      <tr><td>ชื่อ - นามสกุล : ดวงทิพย์ นาคปลัด</td><td>ไม่ใช้ เพราะเป็นชื่อในบัญชีธนาคาร</td></tr>
+      <tr><td>มายด์ (ไม่มีคำว่า ชื่อ หรือ พี่)</td><td>ไม่พบชื่อ</td></tr>
+    </table>
+    <div class="tip">ไม่มีชื่อในโน้ตก็ยังตอบได้ โปรแกรมส่งข้อความแบบไม่มีชื่อลูกค้า เช่น "สวัสดีค่ะ น้องขนมยินดีให้บริการค่ะ"</div>
+
+    <h3>ใส่แท็ก และดูป้ายบนหน้าแชท</h3>
+    <p style="margin:0">QuickWai ขึ้นป้ายเล็กๆ ที่มุมขวาบนของหน้าแชท บอกว่าแชทนี้ขาดอะไร</p>
+    <div>
+      <span class="badge bad"><b>QuickWai: ยังไม่มีโน้ตชื่อ และ แท็ก</b>✗ โน้ตชื่อลูกค้า: ยังไม่มี<br>✗ แท็ก: ยังไม่ใส่</span>
+      <span class="badge warn"><b>QuickWai: ยังไม่มีแท็ก</b>✓ โน้ตชื่อลูกค้า: พี่น้ำ<br>✗ แท็ก: ยังไม่ใส่</span>
+      <span class="badge good">✓ QuickWai: พี่น้ำ · มีแท็ก</span>
+    </div>
+    <table style="margin-top:12px">
+      <tr><th>สีป้าย</th><th>ต้องทำอะไร</th></tr>
+      <tr><td>แดง</td><td>ยังไม่มีชื่อในโน้ต เขียนชื่อลูกค้าในโน้ต</td></tr>
+      <tr><td>เหลือง</td><td>ยังไม่ใส่แท็ก กด "+ ใส่แท็ก" ใต้ชื่อลูกค้า</td></tr>
+      <tr><td>เขียว</td><td>ครบแล้ว ตอบได้เลย</td></tr>
+    </table>
+    <p style="font-size:14px;color:var(--muted)">ป้ายบังหน้าจอ ใช้เมาส์ลากไปวางที่อื่นได้</p>
+  </section>
+
+  <section id="reply">
+    <h2><small>ส่วนที่ 4</small>สร้างข้อความที่ใช้บ่อย (Reply)</h2>
+    <p class="sub">ทำครั้งเดียวต่อ 1 ข้อความ แก้ไขทีหลังได้</p>
+
+    <div class="step"><div class="num">1</div><div>
+      <p>ในโปรแกรม QuickWai กดปุ่มสีน้ำเงิน <b class="btn">+ เพิ่ม Reply</b></p>
+    </div></div>
+    <div class="step"><div class="num">2</div><div>
+      <p>ช่อง <b>ชื่อ Reply</b>: พิมพ์ชื่อสั้นๆ ให้ตัวเองจำได้ เช่น แจ้งยอดเข้าแล้ว ลูกค้าไม่เห็นชื่อนี้</p>
+    </div></div>
+    <div class="step"><div class="num">3</div><div>
+      <p>ช่อง <b>Hotkey</b>: คลิกในช่อง 1 ครั้ง แล้วกดปุ่มที่ต้องการใช้ เช่น กด <b class="k">Alt</b> ค้างไว้ แล้วกด <b class="k">5</b> ช่องจะขึ้นว่า Alt + 5</p>
+    </div></div>
+    <div class="step"><div class="num">4</div><div>
+      <p>ช่อง <b>ข้อความ</b>: พิมพ์ข้อความที่จะส่งให้ลูกค้า</p>
+      <p>ตรงที่ต้องการให้มีชื่อลูกค้า กดคำว่า <b class="btn">แทรก {ชื่อ}</b> ตอนส่ง โปรแกรมใส่ชื่อจริงของลูกค้าแทนคำนี้</p>
+      <p>ต้องการส่งรูปด้วย กด <b class="btn">+ เพิ่มรูป</b> แล้วเลือกรูป ใส่ได้หลายรูป</p>
+      <img class="shot" src="img/editor.png" alt="หน้าเพิ่ม Reply มีช่องชื่อ หมวด Hotkey ข้อความ และปุ่มเพิ่มรูป">
+    </div></div>
+    <div class="step"><div class="num">5</div><div>
+      <p>กดปุ่มสีน้ำเงิน <b class="btn">บันทึก</b> เสร็จ 1 ข้อความ</p>
+      <p>แก้ไขทีหลัง: คลิกที่ข้อความนั้นในหน้าหลัก</p>
+    </div></div>
+
+    <h3>ปุ่มเดียว หลายข้อความ (ชุดข้อความ)</h3>
+    <p style="margin:0">เรื่องเดียวกันมีคำตอบหลายแบบ เช่น เรื่องถอนเงิน: "ถอนสำเร็จ" "รอคิว" "ขออภัยที่ช้า" ใส่รวมไว้ใน Reply เดียว ใช้ Hotkey เดียว</p>
+    <div class="step"><div class="num">1</div><div>
+      <p>ในหน้าเพิ่มหรือแก้ไข Reply กดปุ่ม <b class="btn">+ เพิ่มชุดข้อความ</b> จะได้กล่องใหม่ "ชุดที่ 2"</p>
+      <p>พิมพ์ข้อความในแต่ละชุด แต่ละชุดใส่รูปของตัวเองได้</p>
+      <img class="shot" src="img/editor-sets.png" alt="หน้าเพิ่ม Reply ที่มี 3 ชุดข้อความ แต่ละชุดมีปุ่มแทรกชื่อ ขึ้น ลง ลบชุด และเพิ่มรูป">
+    </div></div>
+    <div class="step"><div class="num">2</div><div>
+      <p>เรียงลำดับด้วยคำว่า <b class="btn">↑ ขึ้น</b> และ <b class="btn">↓ ลง</b> เลขของชุดคือเลขที่กดตอนตอบลูกค้า</p>
+      <p>ลบชุดที่ไม่ใช้ด้วยคำว่า <b class="btn">ลบชุด</b> แล้วกด <b class="btn">บันทึก</b></p>
+    </div></div>
   </section>
 
   <section id="use">
-    <h2><small>ส่วนที่ 3</small>ใช้งาน</h2>
-    <p class="sub">เตรียมโน้ต สร้าง Reply แล้วกดปุ่มเดียวตอนตอบ</p>
+    <h2><small>ส่วนที่ 5</small>ตอบลูกค้า</h2>
+    <p class="sub">ใช้ทุกวัน จำแค่ 3 ข้อนี้</p>
 
-    <h3>เตรียมโน้ตลูกค้า</h3>
-    <p style="margin:0">ในแถบโน้ตของแชท เขียนคำว่า <b>ชื่อ</b> ตามด้วยชื่อลูกค้า หรือขึ้นต้นบรรทัดด้วย <b>พี่</b> เช่น พี่บราวน์</p>
-    <div class="mock" style="max-width:300px"><div class="body">
-      <div class="row"><b>โน้ต 1/1</b><span class="grow"></span><span style="color:#06c755;font-size:18px">+</span></div>
-      <div class="notecard hl">ชื่อ มายด์</div>
-    </div></div>
-    <div class="note">QuickWai ใช้บรรทัดที่ขึ้นต้นด้วย "พี่" ก่อน เช่น พี่น้ำ ถ้าไม่มี จึงใช้คำที่ตามหลังคำว่า "ชื่อ" บรรทัด "ชื่อ - นามสกุล" เป็นชื่อในบัญชี โปรแกรมไม่ใช้เรียกลูกค้า โน้ตที่เขียนแค่ "มายด์" โปรแกรมจะไม่พบชื่อ</div>
-
-    <h3>ใส่แท็ก และดูป้ายเตือนบนหน้าแชท</h3>
-    <p style="margin:0">ทุกแชทต้องมี 2 อย่างก่อนตอบ: โน้ตชื่อลูกค้า และแท็ก QuickWai ขึ้นป้ายมุมขวาบนของช่องแชทให้เห็นว่าขาดอะไร</p>
-    <div>
-      <span class="badge bad"><b>QuickWai: ยังไม่มีโน้ตชื่อ และ แท็ก</b>✗ โน้ตชื่อลูกค้า: ยังไม่มี<br>✗ แท็ก: ยังไม่ใส่</span>
-      <span class="badge warn"><b>QuickWai: ยังไม่มีแท็ก</b>✓ โน้ตชื่อลูกค้า: มายด์<br>✗ แท็ก: ยังไม่ใส่</span>
-      <span class="badge good">✓ QuickWai: มายด์ · มีแท็ก</span>
-    </div>
-    <ul>
-      <li>แดง: ยังไม่มีโน้ตชื่อ เหลือง: ยังไม่ใส่แท็ก เขียว: ครบแล้ว</li>
-      <li>ลากป้ายไปวางตรงไหนก็ได้</li>
-      <li>ปิดป้าย: กดไอคอน QuickWai บนแถบ Chrome แล้วเอาติ๊ก "แสดงป้ายบนหน้าแชท" ออก</li>
-    </ul>
-
-    <h3>สร้าง Reply</h3>
     <div class="step"><div class="num">1</div><div>
-      <p>กด <b class="btn">+ เพิ่ม Reply</b> ใส่ชื่อ Reply และเลือกหมวด</p>
+      <p>เปิดแชทลูกค้าใน LINE OA</p>
+      <p>ไม่ต้องคลิกช่องพิมพ์ข้อความ โปรแกรมย้ายไปให้เอง</p>
     </div></div>
     <div class="step"><div class="num">2</div><div>
-      <p>คลิกช่อง <b>Hotkey</b> แล้วกดปุ่มที่ต้องการ เช่น <b class="k">Alt</b> + <b class="k">4</b></p>
+      <p>กด Hotkey ของข้อความที่ต้องการ เช่น กด <b class="k">Alt</b> ค้างไว้ แล้วกด <b class="k">1</b></p>
+      <p>ข้อความพร้อมชื่อลูกค้าลงช่องพิมพ์ให้</p>
+      <div class="mock"><div class="body"><div style="color:#6b7280">ลูกค้า: ฝากยังไงคะ</div><div class="notecard hl" style="margin-top:14px">สวัสดีครับพี่น้ำ ฝากเงินได้ตามขั้นตอนด้านล่างครับ</div></div></div>
     </div></div>
     <div class="step"><div class="num">3</div><div>
-      <p>พิมพ์ข้อความ ตรงที่ต้องการชื่อลูกค้า กด <b class="btn">แทรก {ชื่อ}</b> ต้องการส่งรูปด้วย กด <b class="btn">+ เพิ่มรูป</b> ใส่ได้หลายรูป แล้วกด <b class="btn">บันทึก</b></p>
-      <img class="shot" src="img/editor.png" alt="หน้าเพิ่ม Reply มีช่องชื่อ หมวด Hotkey ข้อความ และรูป">
-    </div></div>
-
-    <h3>หลายชุดข้อความใน Hotkey เดียว</h3>
-    <p style="margin:0">Reply 1 อันใส่ข้อความได้หลายชุด เหมาะกับเรื่องเดียวกันที่มีคำตอบหลายแบบ</p>
-    <ul>
-      <li>ในหน้าแก้ไข Reply กด <b class="btn">+ เพิ่มชุดข้อความ</b> แต่ละชุดมีข้อความและรูปของตัวเอง</li>
-      <li>กด "↑ ขึ้น" "↓ ลง" เพื่อเรียงลำดับ ลำดับนี้คือเลขที่ใช้กดตอนตอบ</li>
-      <li>ตอนตอบ กด Hotkey จะขึ้นรายการชุดข้อความ กดเลข <b class="k">1</b> ถึง <b class="k">9</b> เพื่อวางทันที หรือกดลูกศรแล้ว <b class="k">Enter</b></li>
-    </ul>
-    <img class="shot small" src="img/sets-panel.png" alt="หน้าเลือกชุดข้อความ ด้านซ้ายเป็นรายการชุด ด้านขวาเป็นข้อความเต็ม">
-
-    <h3>ตอบลูกค้า</h3>
-    <div class="step"><div class="num">1</div><div>
-      <p>เปิดแชทลูกค้าใน LINE OA ไม่ต้องคลิกช่องพิมพ์ข้อความ โปรแกรมย้ายเคอร์เซอร์ไปให้เอง</p>
-    </div></div>
-    <div class="step"><div class="num">2</div><div>
-      <p>กด Hotkey ของ Reply เช่น <b class="k">Alt</b> + <b class="k">1</b> ข้อความพร้อมชื่อลูกค้าลงช่องพิมพ์ให้</p>
-    </div></div>
-    <div class="step"><div class="num">3</div><div>
-      <p>ตรวจข้อความ แล้วกด <b class="k">Enter</b> เพื่อส่ง</p>
-      <p>ถ้า Reply มีรูป LINE จะถามยืนยัน กด <b class="btn">ส่ง</b></p>
+      <p>อ่านตรวจข้อความ แก้หรือพิมพ์เพิ่มได้ แล้วกด <b class="k">Enter</b> เพื่อส่ง</p>
+      <p>ถ้าข้อความมีรูป LINE จะถามยืนยัน กดปุ่มสีเขียว <b class="btn">ส่ง</b></p>
       <div class="mock" style="max-width:420px"><div class="body">
         <b>ต้องการส่งไฟล์ในห้องแชทนี้หรือไม่</b>
         <div class="row" style="margin-top:12px;gap:8px"><span style="width:64px;height:64px;border-radius:8px;background:#fde9a8;display:inline-block"></span><span style="width:64px;height:64px;border-radius:8px;background:#c9dcfb;display:inline-block"></span></div>
         <div style="text-align:right;margin-top:12px"><span class="mbtn" style="color:#1f2933;border-radius:6px">ยกเลิก</span> <span class="mbtn green hl">ส่ง</span></div>
       </div></div>
-      <div class="tip">โปรแกรมวางข้อความให้ แต่ไม่กดส่งแทน คุณตรวจและกดส่งเองทุกครั้ง</div>
+      <div class="tip">โปรแกรมแค่วางข้อความให้ ไม่กดส่งแทน คุณตรวจและกดส่งเองทุกครั้ง จึงไม่มีข้อความหลุดไปหาลูกค้าเอง</div>
     </div></div>
 
-    <h3>จำ Hotkey ไม่ได้ ใช้ค้นหาด่วน</h3>
-    <p style="margin:0">เปิดแชทลูกค้า กด <b class="k">Ctrl</b> + <b class="k">Space</b> พิมพ์คำค้น แล้วกด <b class="k">Enter</b></p>
-    <img class="shot small" src="img/panel.png" alt="หน้าค้นหาด่วน แสดงชื่อลูกค้าด้านบน ช่องค้นหา และรายการ Reply">
+    <h3>ถ้า Hotkey นั้นมีหลายชุดข้อความ</h3>
+    <p style="margin:0">กด Hotkey แล้ว<b>ปล่อยมือ</b> หน้าต่างเล็กจะขึ้นมาให้เลือก ด้านซ้ายคือรายการ ด้านขวาคือข้อความเต็ม</p>
+    <img class="shot" src="img/sets-panel.png" alt="หน้าเลือกชุดข้อความ ด้านซ้ายเป็นรายการชุด 1 2 3 ด้านขวาเป็นข้อความเต็มของชุดที่เลือก">
     <table style="margin-top:12px">
-      <tr><th>ปุ่ม</th><th>ทำอะไร</th></tr>
-      <tr><td><kbd>Enter</kbd></td><td>วางข้อความและรูปทั้งหมด</td></tr>
-      <tr><td><kbd>Shift</kbd> + <kbd>Enter</kbd></td><td>เลือกรูปที่จะส่งก่อน</td></tr>
-      <tr><td><kbd>Ctrl</kbd> + <kbd>1</kbd> ถึง <kbd>9</kbd></td><td>เลือกรายการตามลำดับ</td></tr>
-      <tr><td><kbd>Esc</kbd></td><td>ปิด</td></tr>
+      <tr><th>กดปุ่ม</th><th>ผล</th></tr>
+      <tr><td>เลข <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> ...</td><td>วางชุดเลขนั้นทันที เร็วที่สุด</td></tr>
+      <tr><td>ลูกศร <kbd>↑</kbd> <kbd>↓</kbd></td><td>เลื่อนดูทีละชุด</td></tr>
+      <tr><td><kbd>Enter</kbd> หรือ <kbd>Tab</kbd></td><td>วางชุดที่แถบสีฟ้าอยู่</td></tr>
+      <tr><td><kbd>Esc</kbd> (มุมซ้ายบนของคีย์บอร์ด)</td><td>ปิด ไม่วางอะไร</td></tr>
     </table>
-    <div class="note">แถบบนขึ้น "ไม่พบชื่อในโน๊ต" ยังส่งได้ตามปกติ โปรแกรมตัดคำว่า {ชื่อ} ออกให้ ข้อความจะไม่มีชื่อลูกค้า</div>
+
+    <h3>จำ Hotkey ไม่ได้ ใช้ค้นหา</h3>
+    <p style="margin:0">เปิดแชทลูกค้า กด <b class="k">Ctrl</b> ค้างไว้ แล้วกด <b class="k">Space</b> (ปุ่มยาวที่สุดด้านล่าง) พิมพ์คำที่จำได้ เช่น ถอน แล้วกด <b class="k">Enter</b></p>
+    <img class="shot" src="img/panel.png" alt="หน้าค้นหา แสดงชื่อลูกค้าด้านบน ช่องค้นหา และรายการ Reply">
 
     <h3>เรื่องที่ควรรู้</h3>
     <ul>
-      <li>Hotkey ของ Reply ใช้ได้เฉพาะตอนหน้าแชท LINE OA อยู่ด้านหน้า</li>
-      <li>กดกากบาทปิดหน้าต่าง โปรแกรมยังทำงานอยู่ ไอคอนอยู่มุมขวาล่างของจอ</li>
-      <li>โปรแกรมเปิดเองตอนเปิดเครื่อง ปิดได้ที่ <b class="btn">ตั้งค่าและข้อมูล</b></li>
-      <li>โปรแกรมอัปเดตเอง ต้องการอัปเดตทันที กด <b class="btn">ตั้งค่าและข้อมูล</b> แล้วกด <b class="btn">ตรวจอัปเดต</b> โปรแกรมจะเปิดใหม่เอง</li>
-      <li>โค้ดใช้งานมีวันหมดอายุ 7 วันสุดท้ายมีแถบสีเหลืองเตือน ส่งรหัสเครื่องให้ผู้ดูแลเพื่อขอโค้ดใหม่</li>
-      <li>ส่งชุด Reply ให้เพื่อนได้ กด <b class="btn">ส่งออก</b> เพื่อนกด <b class="btn">นำเข้า</b></li>
+      <li>Hotkey ใช้ได้เฉพาะตอนเปิดหน้าแชท LINE OA อยู่ เปิดโปรแกรมอื่นอยู่ Hotkey ไม่ทำงาน</li>
+      <li>กดกากบาทปิดหน้าต่าง QuickWai โปรแกรม<b>ยังทำงานอยู่</b> ไอคอนอยู่มุมขวาล่างของจอ ใกล้นาฬิกา คลิกไอคอนเพื่อเปิดหน้าต่างอีกครั้ง</li>
+      <li>เปิดเครื่องใหม่ โปรแกรมเปิดเอง ไม่ต้องทำอะไร</li>
+      <li>โปรแกรมอัปเดตเอง ต้องการอัปเดตทันที กด <b class="btn">ตั้งค่าและข้อมูล</b> แล้วกด <b class="btn">ตรวจอัปเดต</b></li>
+      <li>โค้ดใกล้หมดอายุ มีแถบสีเหลืองเตือน 7 วันล่วงหน้า กด <b class="btn">คัดลอกรหัสเครื่อง</b> ส่งให้ผู้ดูแลเพื่อขอโค้ดใหม่</li>
+      <li>ส่งข้อความที่เตรียมไว้ให้เพื่อน: กด <b class="btn">ตั้งค่าและข้อมูล</b> แล้วกด <b class="btn">ส่งออก</b> ส่งไฟล์ให้เพื่อน เพื่อนกด <b class="btn">นำเข้า</b></li>
     </ul>
     <img class="shot" src="img/about.png" alt="หน้าตั้งค่าและข้อมูล มีสิทธิ์ใช้งาน ส่งออก นำเข้า เวอร์ชัน และปุ่มออกจากโปรแกรม">
   </section>
 
   <section id="help">
     <h2>แก้ปัญหา</h2>
+    <p class="sub">ลองตามตารางก่อน ถ้าไม่หาย ถ่ายรูปหน้าจอส่งให้ผู้ดูแล</p>
     <table>
       <tr><th>อาการ</th><th>วิธีแก้</th></tr>
-      <tr><td>ป้ายขึ้น "Extension ไม่ได้เชื่อมต่อ"</td><td>เปิดหน้า LINE OA แล้วกด F5 ถ้ายังไม่ขึ้น ตรวจว่า Extension เปิดอยู่ในหน้า chrome://extensions</td></tr>
-      <tr><td>Chrome ขึ้น "ไม่สามารถโหลดส่วนขยาย ไฟล์ Manifest หายไป"</td><td>เลือกผิดโฟลเดอร์ กดยกเลิก กด Load unpacked ใหม่ แล้วเลือกโฟลเดอร์ชื่อ extension</td></tr>
-      <tr><td>ขึ้น "ไม่พบแถบโน้ต"</td><td>เปิดแถบโน้ตด้านขวาของแชท ถ้ายังไม่พบ กดไอคอน QuickWai บนแถบ Chrome กด "เลือกแถบโน้ตเอง" แล้วคลิกที่แถบโน้ต</td></tr>
-      <tr><td>ขึ้น "ไม่พบชื่อในโน๊ต"</td><td>ตรวจว่าโน้ตมีบรรทัดขึ้นต้นด้วย "พี่" เช่น พี่น้ำ หรือมีคำว่า "ชื่อ" นำหน้า เช่น ชื่อ มายด์</td></tr>
-      <tr><td>กด Hotkey แล้วไม่มีอะไรเกิดขึ้น</td><td>คลิกช่องพิมพ์ข้อความในแชทก่อน และตรวจว่าป้าย Extension เป็นสีเขียว</td></tr>
-      <tr><td>ขึ้น "วางไม่สำเร็จ"</td><td>ข้อความอยู่ใน Clipboard แล้ว คลิกช่องพิมพ์ข้อความ กด Ctrl + V</td></tr>
-      <tr><td>ใช้ Incognito แล้วชื่อไม่ขึ้น</td><td>เปิดสวิตช์ Allow in Incognito ตามส่วนที่ 2</td></tr>
+      <tr><td>ป้ายในโปรแกรมเป็นสีเหลือง "Extension ไม่ได้เชื่อมต่อ"</td><td>เปิดหน้า LINE OA แล้วกด F5 ถ้ายังเหลือง ทำส่วนที่ 2 ใหม่</td></tr>
+      <tr><td>กด Hotkey แล้วไม่มีอะไรเกิดขึ้น</td><td>ตรวจ 3 อย่าง: เปิดหน้าแชท LINE OA อยู่ ป้ายในโปรแกรมเป็นสีเขียว และ QuickWai เปิดอยู่ (มีไอคอนมุมขวาล่าง)</td></tr>
+      <tr><td>ข้อความไม่ลงช่องพิมพ์</td><td>คลิกช่องพิมพ์ข้อความ 1 ครั้ง แล้วกด Hotkey ใหม่</td></tr>
+      <tr><td>หน้าต่างเลือกชุดขึ้นมา แต่กดเลขหรือลูกศรไม่ได้</td><td>ปล่อยมือจากปุ่ม Alt ก่อน แล้วค่อยกดเลข หรือคลิกในหน้าต่างนั้น 1 ครั้ง</td></tr>
+      <tr><td>ขึ้นข้อความ "วางไม่สำเร็จ"</td><td>คลิกช่องพิมพ์ข้อความ แล้วกด Ctrl + V</td></tr>
+      <tr><td>ข้อความไม่มีชื่อลูกค้า</td><td>โน้ตยังไม่มีชื่อ เขียน "พี่น้ำ" หรือ "ชื่อ มายด์" ในโน้ต ดูส่วนที่ 3</td></tr>
+      <tr><td>ชื่อลูกค้าผิด</td><td>ดูโน้ต โปรแกรมใช้บรรทัดที่ขึ้นต้นด้วย "พี่" ก่อน แก้โน้ตให้ถูก</td></tr>
+      <tr><td>ขึ้น "ไม่พบแถบโน้ต"</td><td>เปิดแชทลูกค้าให้เห็นโน้ตด้านขวา ถ้ายังขึ้น แจ้งผู้ดูแล</td></tr>
+      <tr><td>Chrome ขึ้น "ไฟล์ Manifest หายไป"</td><td>เลือกผิดโฟลเดอร์ กดยกเลิก แล้วทำส่วนที่ 2 ข้อ 3 และ 4 ใหม่</td></tr>
+      <tr><td>ใช้ Chrome ไม่ระบุตัวตน แล้วป้ายไม่เขียว</td><td>เปิดสวิตช์ Allow in Incognito ตามท้ายส่วนที่ 2</td></tr>
+      <tr><td>โปรแกรมขึ้นหน้าใส่โค้ดอีกครั้ง</td><td>โค้ดหมดอายุ กดคัดลอกรหัสเครื่อง ส่งให้ผู้ดูแล</td></tr>
     </table>
   </section>
 

@@ -7,7 +7,7 @@ const path = require('path');
 const docs = path.join(__dirname, '..', 'docs');
 const WIDTH = 1280;
 const HEIGHT = 720;
-const SECONDS_PER_SLIDE = 6;
+const SECONDS_PER_SLIDE = 7;
 const FADE_MS = 400;
 
 const img = (name) => `<img src="img/${name}.png">`;
@@ -16,30 +16,44 @@ const key = (text) => `<b class="k">${text}</b>`;
 const btn = (text) => `<b class="btn">${text}</b>`;
 
 // part: section label. n: step number inside the part. text: what to do. show: picture or drawing.
+const P1 = 'ส่วนที่ 1 ติดตั้งโปรแกรม';
+const P2 = 'ส่วนที่ 2 ติดตั้งส่วนเสริม';
+const P3 = 'ส่วนที่ 3 เตรียมแชทลูกค้า';
+const P4 = 'ส่วนที่ 4 สร้างข้อความ';
+const P5 = 'ส่วนที่ 5 ตอบลูกค้า';
+const note = (text) => `<div class="mock" style="max-width:300px"><div class="body"><div class="row"><b>โน้ต 1/1</b><span class="grow"></span><span style="color:#06c755;font-size:18px">+</span></div><div class="notecard hl">${text}</div></div></div>`;
+
 const SLIDES = [
-  { cover: true, title: 'คู่มือ QuickWai', text: 'ตอบแชท LINE OA ด้วยปุ่มเดียว<br>ตั้งค่าครั้งเดียว 3 ส่วน ราว 10 นาที' },
+  { cover: true, title: 'คู่มือ QuickWai', text: 'ตอบแชท LINE OA ด้วยปุ่มเดียว<br>ทำตามทีละข้อ 5 ส่วน ราว 10 นาที<br>กดหยุดวิดีโอได้ทุกเมื่อ' },
 
-  { part: 'ส่วนที่ 1 ติดตั้งโปรแกรม', n: 1, text: `ดับเบิลคลิกไฟล์ ${key('QuickWai-Setup')} ที่ได้รับ`, show: mock(`<div class="mock"><div class="body row"><img src="img/icon.png" width="44" height="44"><div><b>QuickWai-Setup</b><br><span style="color:#6b7280">Application</span></div></div></div>`) },
-  { part: 'ส่วนที่ 1 ติดตั้งโปรแกรม', n: 2, text: `ถ้าขึ้นหน้าต่างสีฟ้า กด ${btn('More info')} แล้วกด ${btn('Run anyway')}`, show: mock(`<div class="mock blue"><div class="body"><div style="font-size:17px;margin-bottom:6px">Windows protected your PC</div><div>Microsoft Defender SmartScreen prevented an unrecognized app from starting. <u class="hl">More info</u></div><div style="text-align:right;margin-top:16px"><span class="winbtn hl">Run anyway</span><span class="winbtn">Don't run</span></div></div></div>`) },
-  { part: 'ส่วนที่ 1 ติดตั้งโปรแกรม', n: 3, text: `โปรแกรมขึ้นหน้าใส่โค้ด กด ${btn('คัดลอกรหัสเครื่อง')} ส่งให้ผู้ดูแลพร้อมชื่อของคุณ`, show: img('license') },
-  { part: 'ส่วนที่ 1 ติดตั้งโปรแกรม', n: 4, text: `วางโค้ดที่ผู้ดูแลส่งกลับมา กด ${btn('เริ่มใช้งาน')} เข้าโปรแกรมได้แล้ว`, show: img('main-off') },
+  { part: P1, n: 1, text: `หาไฟล์ ${key('QuickWai-Setup')} ที่ผู้ดูแลส่งให้<br>กดเมาส์ซ้าย 2 ครั้งเร็วๆ ที่ไฟล์`, show: mock(`<div class="mock"><div class="body row"><img src="img/icon.png" width="44" height="44"><div><b>QuickWai-Setup</b><br><span style="color:#6b7280">Application</span></div></div></div>`) },
+  { part: P1, n: 2, text: `ขึ้นหน้าต่างสีฟ้า ไม่ต้องตกใจ<br>กด ${btn('More info')} ก่อน<br>แล้วกด ${btn('Run anyway')}`, show: mock(`<div class="mock blue"><div class="body"><div style="font-size:17px;margin-bottom:6px">Windows protected your PC</div><div>Microsoft Defender SmartScreen prevented an unrecognized app from starting. <u class="hl">More info</u></div><div style="text-align:right;margin-top:16px"><span class="winbtn hl">Run anyway</span><span class="winbtn">Don't run</span></div></div></div>`) },
+  { part: P1, n: 3, text: `โปรแกรมเปิดเอง<br>กด ${btn('คัดลอกรหัสเครื่อง')}<br>ส่งรหัสและชื่อของคุณให้ผู้ดูแลทาง LINE`, show: img('license') },
+  { part: P1, n: 4, text: `ผู้ดูแลส่งโค้ดกลับมา<br>วางโค้ดในช่อง กด ${btn('เริ่มใช้งาน')}<br><small>ป้ายสีเหลืองมุมขวาบน เป็นเรื่องปกติ</small>`, show: img('main-off') },
 
-  { part: 'ส่วนที่ 2 ติดตั้ง Extension', n: 1, text: `ในโปรแกรม กดป้าย ${btn('Extension ไม่ได้เชื่อมต่อ')} มุมขวาบน เปิดหน้าต่างนี้ค้างไว้`, show: img('ext-guide') },
-  { part: 'ส่วนที่ 2 ติดตั้ง Extension', n: 2, text: `เปิด Chrome พิมพ์ ${key('chrome://extensions')} กด Enter แล้วเปิดสวิตช์ ${btn('Developer mode')}`, show: mock(`<div class="mock"><div class="bar"><span class="url hl">chrome://extensions</span></div><div class="body row"><b>Extensions</b><span class="grow"></span><span class="hl">Developer mode <span class="toggle"></span></span></div></div>`) },
-  { part: 'ส่วนที่ 2 ติดตั้ง Extension', n: 3, text: `กดปุ่ม ${btn('Load unpacked')} ด้านซ้ายบน`, show: mock(`<div class="mock"><div class="body row" style="gap:8px"><span class="mbtn hl">Load unpacked</span><span class="mbtn">Pack extension</span><span class="mbtn">Update</span></div></div>`) },
-  { part: 'ส่วนที่ 2 ติดตั้ง Extension', n: 4, text: `ในโปรแกรม กด ${btn('คัดลอก')} หลังที่อยู่โฟลเดอร์ วางในช่องที่อยู่ กด Enter แล้วกด ${btn('Select Folder')}<br><small>หน้าต่างเลือกโฟลเดอร์ดูว่างเปล่า ถูกแล้ว</small>`, show: mock(`<div class="mock"><div class="bar"><span class="url hl">...\\AppData\\Roaming\\QuickWai\\extension</span></div><div class="body" style="height:90px;color:#9aa1ab">No items match your search.</div><div class="body row" style="border-top:1px solid #d9dde3"><span class="grow"></span><span class="mbtn hl" style="border-radius:6px">Select Folder</span><span class="mbtn" style="border-radius:6px;color:#1f2933">Cancel</span></div></div>`) },
-  { part: 'ส่วนที่ 2 ติดตั้ง Extension', n: 5, text: `เปิดหน้า LINE OA กด ${key('F5')} เปิดแชทและแถบโน้ต ป้ายในโปรแกรมเป็นสีเขียว`, show: img('main-on') },
-  { part: 'ส่วนที่ 2 ติดตั้ง Extension', n: 6, text: `ใช้ Incognito: กด ${btn('Details')} ของ QuickWai Note Reader แล้วเปิด ${btn('Allow in Incognito')}`, show: mock(`<div class="mock"><div class="body"><div class="row"><img src="img/icon.png" width="32" height="32"><div><b>QuickWai Note Reader</b><br><span style="color:#6b7280">อ่านชื่อลูกค้าจากโน้ตใน LINE OA</span></div></div><div class="row" style="margin-top:12px"><span class="mbtn hl">Details</span><span class="mbtn">Remove</span><span class="grow"></span><span class="toggle"></span></div></div></div>`) },
+  { part: P2, n: 1, text: `ในโปรแกรม กดป้ายสีเหลือง ${btn('Extension ไม่ได้เชื่อมต่อ')}<br>หน้าต่างนี้ขึ้นมา เปิดค้างไว้`, show: img('ext-guide') },
+  { part: P2, n: 2, text: `เปิด Chrome<br>พิมพ์ ${key('chrome://extensions')} ในช่องบนสุด กด Enter<br>เปิดสวิตช์ ${btn('Developer mode')} มุมขวาบน`, show: mock(`<div class="mock"><div class="bar"><span class="url hl">chrome://extensions</span></div><div class="body row"><b>Extensions</b><span class="grow"></span><span class="hl">Developer mode <span class="toggle"></span></span></div></div>`) },
+  { part: P2, n: 3, text: `ปุ่มใหม่ขึ้นมาด้านซ้ายบน<br>กด ${btn('Load unpacked')}`, show: mock(`<div class="mock"><div class="body row" style="gap:8px"><span class="mbtn hl">Load unpacked</span><span class="mbtn">Pack extension</span><span class="mbtn">Update</span></div></div>`) },
+  { part: P2, n: 4, text: `ที่ QuickWai ข้อ 3 กด ${btn('คัดลอก')}<br>วางในช่องยาวบนสุด กด Enter<br>แล้วกด ${btn('Select Folder')}<br><small>หน้าต่างดูว่างเปล่า ถูกแล้ว</small>`, show: mock(`<div class="mock"><div class="bar"><span class="url hl">...\\AppData\\Roaming\\QuickWai\\extension</span></div><div class="body" style="height:90px;color:#9aa1ab">No items match your search.</div><div class="body row" style="border-top:1px solid #d9dde3"><span class="grow"></span><span class="mbtn hl" style="border-radius:6px">Select Folder</span><span class="mbtn" style="border-radius:6px;color:#1f2933">Cancel</span></div></div>`) },
+  { part: P2, n: 5, text: `เปิดหน้า LINE OA กดปุ่ม ${key('F5')}<br>เปิดแชทลูกค้า 1 คน<br>ป้ายในโปรแกรมเป็นสีเขียว = เสร็จ`, show: img('main-on') },
+  { part: P2, n: 6, text: `ใช้ Chrome ไม่ระบุตัวตน:<br>กด ${btn('Details')} ของ QuickWai Note Reader<br>เปิด ${btn('Allow in Incognito')}`, show: mock(`<div class="mock"><div class="body"><div class="row"><img src="img/icon.png" width="32" height="32"><div><b>QuickWai Note Reader</b><br><span style="color:#6b7280">อ่านชื่อลูกค้าจากโน้ตใน LINE OA</span></div></div><div class="row" style="margin-top:12px"><span class="mbtn hl">Details</span><span class="mbtn">Remove</span><span class="grow"></span><span class="toggle"></span></div></div></div>`) },
 
-  { part: 'ส่วนที่ 3 ใช้งาน', n: 1, text: `ในโน้ตของแชท เขียน ${key('ชื่อ มายด์')} หรือ ${key('พี่บราวน์')}`, show: mock(`<div class="mock" style="max-width:300px"><div class="body"><div class="row"><b>โน้ต 1/1</b><span class="grow"></span><span style="color:#06c755;font-size:18px">+</span></div><div class="notecard hl">ชื่อ มายด์</div></div></div>`) },
-  { part: 'ส่วนที่ 3 ใช้งาน', n: 2, text: 'ใส่แท็กให้แชท ป้าย QuickWai บนหน้าแชทบอกว่าขาดอะไร<br><small>แดง: ไม่มีชื่อ เหลือง: ไม่มีแท็ก เขียว: ครบ</small>', show: mock(`<div><span class="badge bad"><b>QuickWai: ยังไม่มีโน้ตชื่อ และ แท็ก</b>✗ โน้ตชื่อลูกค้า: ยังไม่มี<br>✗ แท็ก: ยังไม่ใส่</span><br><span class="badge warn"><b>QuickWai: ยังไม่มีแท็ก</b>✓ โน้ตชื่อลูกค้า: มายด์<br>✗ แท็ก: ยังไม่ใส่</span><br><span class="badge good">✓ QuickWai: มายด์ · มีแท็ก</span></div>`) },
-  { part: 'ส่วนที่ 3 ใช้งาน', n: 3, text: `กด ${btn('+ เพิ่ม Reply')} ตั้ง Hotkey พิมพ์ข้อความ กด ${btn('แทรก {ชื่อ}')} เพิ่มรูปได้ แล้วกด ${btn('บันทึก')}`, show: img('editor') },
-  { part: 'ส่วนที่ 3 ใช้งาน', n: 4, text: `ตอบลูกค้า: คลิกช่องพิมพ์ข้อความในแชท แล้วกด Hotkey เช่น ${key('Alt')} + ${key('1')}`, show: mock(`<div class="mock"><div class="body"><div style="color:#6b7280">ลูกค้า: ฝากยังไงคะ</div><div class="notecard hl" style="margin-top:14px">สวัสดีครับคุณ มายด์ ฝากเงินได้ตามขั้นตอนด้านล่างครับ</div></div></div>`) },
-  { part: 'ส่วนที่ 3 ใช้งาน', n: 5, text: `ตรวจข้อความ กด ${key('Enter')} เพื่อส่ง ถ้ามีรูป LINE ถามยืนยัน กด ${btn('ส่ง')}`, show: mock(`<div class="mock" style="max-width:420px"><div class="body"><b>ต้องการส่งไฟล์ในห้องแชทนี้หรือไม่</b><div class="row" style="margin-top:12px;gap:8px"><span style="width:64px;height:64px;border-radius:8px;background:#fde9a8;display:inline-block"></span><span style="width:64px;height:64px;border-radius:8px;background:#c9dcfb;display:inline-block"></span></div><div style="text-align:right;margin-top:12px"><span class="mbtn" style="color:#1f2933;border-radius:6px">ยกเลิก</span> <span class="mbtn green hl">ส่ง</span></div></div></div>`) },
-  { part: 'ส่วนที่ 3 ใช้งาน', n: 6, text: `จำ Hotkey ไม่ได้: กด ${key('Ctrl')} + ${key('Space')} พิมพ์ค้นหา แล้วกด ${key('Enter')}`, show: img('panel') },
-  { part: 'ส่วนที่ 3 ใช้งาน', n: 7, text: `${btn('ตั้งค่าและข้อมูล')}: ส่งออก นำเข้าชุด Reply ตรวจอัปเดต ต่ออายุโค้ด และออกจากโปรแกรม`, show: img('about') },
+  { part: P3, n: 1, text: `เขียนชื่อลูกค้าในโน้ต ด้านขวาของแชท<br>เขียน ${key('พี่น้ำ')}<br>หรือ ${key('ชื่อ มายด์')}`, show: mock(note('พี่น้ำ') + '<div style="height:14px"></div>' + note('ชื่อ มายด์')) },
+  { part: P3, n: 2, text: 'ไม่มีชื่อในโน้ต ก็ตอบได้<br>ข้อความออกมาแบบไม่มีชื่อลูกค้า', show: mock(`<div class="mock"><div class="body"><div style="color:#6b7280">มีชื่อในโน้ต</div><div class="notecard">สวัสดีค่ะ <b>พี่น้ำ</b> น้องขนมยินดีให้บริการค่ะ</div><div style="color:#6b7280;margin-top:14px">ไม่มีชื่อในโน้ต</div><div class="notecard">สวัสดีค่ะ น้องขนมยินดีให้บริการค่ะ</div></div></div>`) },
+  { part: P3, n: 3, text: 'ป้าย QuickWai บนหน้าแชท บอกว่าขาดอะไร<br><small>แดง: ยังไม่มีชื่อ<br>เหลือง: ยังไม่ใส่แท็ก<br>เขียว: ครบแล้ว</small>', show: mock(`<div><span class="badge bad"><b>QuickWai: ยังไม่มีโน้ตชื่อ และ แท็ก</b>✗ โน้ตชื่อลูกค้า: ยังไม่มี<br>✗ แท็ก: ยังไม่ใส่</span><br><span class="badge warn"><b>QuickWai: ยังไม่มีแท็ก</b>✓ โน้ตชื่อลูกค้า: พี่น้ำ<br>✗ แท็ก: ยังไม่ใส่</span><br><span class="badge good">✓ QuickWai: พี่น้ำ · มีแท็ก</span></div>`) },
 
-  { cover: true, title: 'พร้อมใช้งาน', text: 'กดกากบาท โปรแกรมยังทำงานอยู่ที่มุมขวาล่างของจอ<br>ติดปัญหา แจ้งผู้ดูแล' },
+  { part: P4, n: 1, text: `ในโปรแกรม กดปุ่มสีน้ำเงิน ${btn('+ เพิ่ม Reply')}<br><small>Reply คือข้อความที่เตรียมไว้ล่วงหน้า</small>`, show: img('main-on') },
+  { part: P4, n: 2, text: `พิมพ์ชื่อ Reply<br>คลิกช่อง Hotkey แล้วกดปุ่มลัดที่ต้องการ<br>เช่น กด ${key('Alt')} ค้างไว้ แล้วกด ${key('5')}`, show: img('editor') },
+  { part: P4, n: 3, text: `พิมพ์ข้อความ<br>กด ${btn('แทรก {ชื่อ}')} ตรงที่ต้องการชื่อลูกค้า<br>กด ${btn('+ เพิ่มรูป')} ถ้าจะส่งรูป<br>แล้วกด ${btn('บันทึก')}`, show: img('editor') },
+  { part: P4, n: 4, text: `ปุ่มเดียว หลายข้อความ:<br>กด ${btn('+ เพิ่มชุดข้อความ')}<br>พิมพ์ข้อความของแต่ละชุด<br><small>เลขชุด คือเลขที่กดตอนตอบ</small>`, show: img('editor-sets') },
+
+  { part: P5, n: 1, text: `เปิดแชทลูกค้า แล้วกด Hotkey<br>เช่น กด ${key('Alt')} ค้างไว้ แล้วกด ${key('1')}<br><small>ไม่ต้องคลิกช่องพิมพ์ก่อน</small>`, show: mock(`<div class="mock"><div class="body"><div style="color:#6b7280">ลูกค้า: ฝากยังไงคะ</div><div class="notecard hl" style="margin-top:14px">สวัสดีครับพี่น้ำ ฝากเงินได้ตามขั้นตอนด้านล่างครับ</div></div></div>`) },
+  { part: P5, n: 2, text: `อ่านตรวจข้อความ<br>กด ${key('Enter')} เพื่อส่ง<br>ถ้ามีรูป กดปุ่มสีเขียว ${btn('ส่ง')}`, show: mock(`<div class="mock" style="max-width:420px"><div class="body"><b>ต้องการส่งไฟล์ในห้องแชทนี้หรือไม่</b><div class="row" style="margin-top:12px;gap:8px"><span style="width:64px;height:64px;border-radius:8px;background:#fde9a8;display:inline-block"></span><span style="width:64px;height:64px;border-radius:8px;background:#c9dcfb;display:inline-block"></span></div><div style="text-align:right;margin-top:12px"><span class="mbtn" style="color:#1f2933;border-radius:6px">ยกเลิก</span> <span class="mbtn green hl">ส่ง</span></div></div></div>`) },
+  { part: P5, n: 3, text: `Hotkey ที่มีหลายชุด:<br>กด Hotkey แล้วปล่อยมือ<br>กดเลข ${key('1')} ${key('2')} ${key('3')} เพื่อเลือกชุด<br><small>หรือกดลูกศร แล้วกด Enter</small>`, show: img('sets-panel') },
+  { part: P5, n: 4, text: `จำ Hotkey ไม่ได้:<br>กด ${key('Ctrl')} ค้างไว้ แล้วกด ${key('Space')}<br>พิมพ์คำค้น แล้วกด ${key('Enter')}`, show: img('panel') },
+  { part: P5, n: 5, text: `${btn('ตั้งค่าและข้อมูล')}:<br>ตรวจอัปเดต ต่ออายุโค้ด<br>ส่งข้อความให้เพื่อน และออกจากโปรแกรม`, show: img('about') },
+
+  { cover: true, title: 'พร้อมใช้งาน', text: 'กดกากบาท โปรแกรมยังทำงานอยู่<br>ไอคอนอยู่มุมขวาล่างของจอ ใกล้นาฬิกา<br>ติดปัญหา ถ่ายรูปหน้าจอส่งให้ผู้ดูแล' },
 ];
 
 function slideHtml(slide, index, mockCss) {
@@ -54,7 +68,7 @@ function slideHtml(slide, index, mockCss) {
     .stage { display: grid; grid-template-columns: 470px 1fr; gap: 36px; height: ${HEIGHT - 56}px; padding: 44px 48px 0; box-sizing: border-box; align-items: center; }
     .part { display: inline-block; padding: 4px 16px; border-radius: 999px; background: #2563eb; color: #fff; font-size: 20px; font-weight: 600; }
     .num { margin: 22px 0 10px; width: 64px; height: 64px; border-radius: 50%; background: #e8effd; color: #2563eb; font-size: 34px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-    .left p { margin: 0; font-size: 31px; line-height: 1.5; }
+    .left p { margin: 0; font-size: 29px; line-height: 1.55; }
     .left small { font-size: 22px; color: #6b7280; }
     .left b.k, .left b.btn { font-size: 26px; }
     .right { display: flex; align-items: center; justify-content: center; height: 100%; min-width: 0; }
@@ -106,6 +120,8 @@ app.whenReady().then(async () => {
   const mockCss = /\/\* simplified drawings of other programs \*\/([\s\S]*?)<\/style>/.exec(fs.readFileSync(path.join(docs, 'index.html'), 'utf8'))[1]
     + ' b.k { font: 600 13px Consolas, monospace; padding: 2px 8px; border: 1px solid #e2e5ea; border-radius: 6px; background: #fff; white-space: nowrap; } b.btn { padding: 1px 8px; border-radius: 6px; background: #e8effd; color: #2563eb; font-weight: 600; white-space: nowrap; }';
   const only = process.argv.includes('--preview') ? 4 : SLIDES.length;
+  // --stills paints the slide images only, for a quick look before a full recording.
+  const stills = process.argv.includes('--stills');
   const tmp = path.join(app.getPath('temp'), 'quickwai-video');
   fs.mkdirSync(tmp, { recursive: true });
 
@@ -121,6 +137,10 @@ app.whenReady().then(async () => {
     frames.push('data:image/png;base64,' + png.toString('base64'));
   }
   painter.destroy();
+  if (stills) {
+    console.log(`slide images in ${tmp}`);
+    return app.quit();
+  }
 
   const recorderFile = path.join(tmp, 'recorder.html');
   fs.writeFileSync(recorderFile, RECORDER);

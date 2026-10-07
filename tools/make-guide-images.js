@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const docs = path.join(__dirname, '..', 'docs');
-const SECTIONS = { install: '1-ติดตั้งโปรแกรม', extension: '2-ติดตั้ง-Extension', use: '3-ใช้งาน', help: '4-แก้ปัญหา' };
+const SECTIONS = { install: '1-ติดตั้งโปรแกรม', extension: '2-ติดตั้งส่วนเสริม', prepare: '3-เตรียมแชท', reply: '4-สร้างข้อความ', use: '5-ตอบลูกค้า', help: '6-แก้ปัญหา' };
 
 app.disableHardwareAcceleration();
 app.whenReady().then(async () => {
