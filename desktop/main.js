@@ -281,7 +281,7 @@ let activeTab = null;
 
 function onExtensionState(state) {
   const key = `${state.incognito ? 'i' : 'n'}:${state.tabId}`;
-  tabs.set(key, { name: String(state.name || '').slice(0, 60), noteFound: !!state.noteFound, focused: !!state.focused, at: Date.now() });
+  tabs.set(key, { name: String(state.name || '').slice(0, 60), noteFound: !!state.noteFound, tag: ['set', 'none'].includes(state.tag) ? state.tag : 'unknown', focused: !!state.focused, at: Date.now() });
   if (state.focused) activeTab = key;
   refresh();
 }
@@ -294,6 +294,7 @@ function status() {
     extConnected: tabs.size > 0,
     name: current ? current.name : '',
     noteFound: current ? current.noteFound : false,
+    tag: current ? current.tag : 'unknown',
     chatFocused: [...tabs.values()].some((tab) => tab.focused),
     paused,
     serverError,

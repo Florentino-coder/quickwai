@@ -71,6 +71,7 @@ function renderStatus(status) {
   pill('guideStatus', '● ' + extLabel, status.extConnected ? 'ok' : 'warn');
   const customer = !status.extConnected ? '' : status.name ? `ลูกค้า: ${status.name}` : status.noteFound ? 'ไม่พบชื่อในโน๊ต' : 'ไม่พบแถบโน้ต';
   pill('customer', customer, status.name ? 'info' : 'warn');
+  pill('tagNote', status.extConnected && status.tag === 'none' ? 'ยังไม่ใส่แท็ก' : '', 'warn');
 
   $('panelKey').textContent = status.paused ? 'หยุดชั่วคราว' : hotkeyLabel(status.panelHotkey);
 

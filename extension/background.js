@@ -1,5 +1,5 @@
 const DESKTOP_URL = 'http://127.0.0.1:38457/state';
-const CONTENT_SCRIPTS = ['extract-name.js', 'content.js'];
+const CONTENT_SCRIPTS = ['extract-name.js', 'overlay.js', 'content.js'];
 
 function isNewer(a, b) {
   const left = String(a).split('.').map(Number);

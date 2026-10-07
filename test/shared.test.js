@@ -12,6 +12,15 @@ test('extractName reads the word after "ชื่อ"', () => {
   assert.equal(extractName('ชื่อ-นามสกุล: สมชาย ใจดี'), 'สมชาย');
 });
 
+test('extractName accepts a line that starts with "พี่"', () => {
+  assert.equal(extractName('พี่บราวน์'), 'พี่บราวน์');
+  assert.equal(extractName('โน้ต 1/1000\nพี่บราวน์\n6 ส.ค. 2026 2.14 น. BIRD'), 'พี่บราวน์');
+  assert.equal(extractName('พี่ บราวน์'), 'พี่บราวน์');
+  assert.equal(extractName('ชื่อ มายด์\nพี่บราวน์'), 'มายด์');
+  assert.equal(extractName('ลูกค้าบอกว่าพี่เขาโอนแล้ว'), '');
+  assert.equal(extractName('พี่'), '');
+});
+
 test('extractName ignores notes without a usable "ชื่อ"', () => {
   assert.equal(extractName('มายด์'), '');
   assert.equal(extractName(''), '');
@@ -41,4 +50,6 @@ test('fillName inserts the name or removes the field', () => {
   assert.equal(fillName(text, 'มายด์'), 'สวัสดีครับคุณ มายด์ ฝากเงินได้ตามขั้นตอนด้านล่างครับ');
   assert.equal(fillName(text, ''), 'สวัสดีครับ ฝากเงินได้ตามขั้นตอนด้านล่างครับ');
   assert.equal(fillName('คุณ {ชื่อ} รบกวนส่งสลิปครับ', ''), 'รบกวนส่งสลิปครับ');
+  assert.equal(fillName(text, 'พี่บราวน์'), 'สวัสดีครับพี่บราวน์ ฝากเงินได้ตามขั้นตอนด้านล่างครับ');
+
 });

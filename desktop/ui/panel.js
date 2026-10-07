@@ -37,11 +37,11 @@ function renderBanner(status) {
     banner.className = 'banner off';
     banner.textContent = 'Extension ไม่ได้เชื่อมต่อ ต้องพิมพ์ชื่อเอง';
   } else if (status.name) {
-    banner.className = 'banner ok';
-    banner.textContent = `ลูกค้า: ${status.name}`;
+    banner.className = status.tag === 'none' ? 'banner warn' : 'banner ok';
+    banner.textContent = `ลูกค้า: ${status.name}` + (status.tag === 'none' ? ' · ยังไม่ใส่แท็ก' : '');
   } else {
     banner.className = 'banner warn';
-    banner.textContent = status.noteFound ? 'ไม่พบชื่อในโน๊ต' : 'ไม่พบแถบโน้ต เปิดแถบโน้ตด้านข้างของแชท';
+    banner.textContent = (status.noteFound ? 'ไม่พบชื่อในโน๊ต' : 'ไม่พบแถบโน้ต เปิดแถบโน้ตด้านข้างของแชท') + (status.tag === 'none' ? ' · ยังไม่ใส่แท็ก' : '');
   }
 }
 

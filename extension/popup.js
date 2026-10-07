@@ -21,13 +21,18 @@ async function refresh() {
   if (!state) {
     set('note', 'เปิดหน้า chat.line.biz ก่อน', false);
     set('name', '-', false);
+    set('tag', '-', false);
     $('text').textContent = '';
     return;
   }
   set('note', state.noteFound ? 'พบ' : 'ไม่พบ', state.noteFound);
   set('name', state.name || 'ไม่พบชื่อในโน๊ต', !!state.name);
+  set('tag', { set: 'ใส่แล้ว', none: 'ยังไม่ใส่', unknown: 'ไม่ทราบ' }[state.tag], state.tag === 'set');
   $('text').textContent = state.noteText || (state.selector ? 'ตำแหน่งที่เลือกไม่มีข้อความ' : '');
 }
+
+chrome.storage.local.get('overlayOn', (saved) => { $('overlayOn').checked = saved.overlayOn !== false; });
+$('overlayOn').onchange = (event) => chrome.storage.local.set({ overlayOn: event.target.checked });
 
 $('pick').onclick = async () => {
   const tab = await activeTab();

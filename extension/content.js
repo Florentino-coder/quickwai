@@ -2,6 +2,9 @@
   const NOTE_HEADING = /^(โน้ต|โน๊ต|notes?|memo|ノート)(\s*\d+\s*\/\s*\d+)?$/i;
   const NOTE_MARKED = '[class*="note" i],[class*="memo" i],[data-testid*="note" i],[aria-label*="note" i],[aria-label*="โน้ต"]';
   const MAX_NOTE_CHARS = 3000;
+  // LINE shows this link only while the chat has no tag.
+  const TAG_EMPTY = /^\+?\s*(ใส่แท็ก|add tags?)$/i;
+  const CHAT_URL = /\/chat\/[^/]+/;
   let selector = null;
   let timer = null;
   let debounce = null;
@@ -18,7 +21,8 @@
     return found.length ? [found.map((el) => el.innerText).join('\n')] : [];
   }
 
-  // The box around a heading that reads "โน้ต" (or "Notes", "โน้ต 1/1").
+  // The boxes around a heading that reads "โน้ต" (or "Notes", "โน้ต 1/1"), smallest first.
+  // The first box may hold only the heading and its counter, so the wider ones are kept too.
   function fromHeadings() {
     const texts = [];
     for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,div,span,p,button,label,a')) {
@@ -27,9 +31,8 @@
       for (let i = 0; i < 5 && box.parentElement; i++) {
         box = box.parentElement;
         const text = box.innerText || '';
-        if (text.length <= el.textContent.length + 2) continue;
-        if (text.length < MAX_NOTE_CHARS) texts.push(text);
-        break;
+        if (text.length >= MAX_NOTE_CHARS) break;
+        if (text.length > el.textContent.length + 2) texts.push(text);
       }
     }
     return texts;
@@ -50,10 +53,22 @@
     return places.find((text) => QRExtractName(text)) ?? places[0] ?? null;
   }
 
+  // True when the page shows the "+ ใส่แท็ก" link, which means the chat has no tag yet.
+  function tagLinkShown() {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (TAG_EMPTY.test(node.nodeValue.trim()) && node.parentElement.offsetParent !== null) return true;
+    }
+    return false;
+  }
+
   function readState() {
     const text = noteText();
+    const noTag = tagLinkShown();
     return {
       url: location.pathname,
+      chatOpen: CHAT_URL.test(location.pathname) || text !== null || noTag,
+      tag: noTag ? 'none' : text !== null ? 'set' : 'unknown',
       noteFound: text !== null,
       name: text ? QRExtractName(text) : '',
       focused: document.hasFocus(),
@@ -63,6 +78,7 @@
 
   function send() {
     const { noteText: _omit, ...state } = readState();
+    QROverlay.render(state);
     try {
       chrome.runtime.sendMessage({ type: 'state', state }).catch(() => {});
     } catch {
