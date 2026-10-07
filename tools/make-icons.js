@@ -45,7 +45,6 @@ app.whenReady().then(async () => {
   const gray = '#8a8f98';
   fs.mkdirSync(path.join(root, 'build'), { recursive: true });
   fs.mkdirSync(path.join(root, 'desktop', 'assets'), { recursive: true });
-  fs.mkdirSync(path.join(root, 'extension', 'icons'), { recursive: true });
 
   const sizes = [16, 32, 48, 256];
   const images = [];
@@ -54,7 +53,7 @@ app.whenReady().then(async () => {
   fs.writeFileSync(path.join(root, 'desktop', 'assets', 'icon.png'), images[3].png);
   fs.writeFileSync(path.join(root, 'desktop', 'assets', 'tray-on.png'), images[1].png);
   fs.writeFileSync(path.join(root, 'desktop', 'assets', 'tray-off.png'), await render(win, gray, 32));
-  for (const size of [16, 48]) fs.writeFileSync(path.join(root, 'extension', 'icons', `${size}.png`), images[sizes.indexOf(size)].png);
-  fs.writeFileSync(path.join(root, 'extension', 'icons', '128.png'), await render(win, blue, 128));
+  for (const size of [16, 48]) fs.writeFileSync(path.join(root, 'extension', `icon${size}.png`), images[sizes.indexOf(size)].png);
+  fs.writeFileSync(path.join(root, 'extension', 'icon128.png'), await render(win, blue, 128));
   app.quit();
 });

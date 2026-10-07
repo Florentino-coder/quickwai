@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "QuickWai Note Reader",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "อ่านชื่อลูกค้าจากโน้ตใน LINE OA แล้วส่งให้โปรแกรม QuickWai บนเครื่องนี้",
   "permissions": [
     "storage",
@@ -31,8 +31,8 @@
     "default_title": "QuickWai"
   },
   "icons": {
-    "16": "icons/16.png",
-    "48": "icons/48.png",
-    "128": "icons/128.png"
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   }
 }

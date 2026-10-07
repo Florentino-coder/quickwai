@@ -59,6 +59,8 @@ function extensionVersion(dir) {
 // The running extension then sees the new version number and reloads itself.
 function syncExtension() {
   if (extensionVersion(EXTENSION_SOURCE) === extensionVersion(extensionDir())) return;
+  // Start clean: a leftover subfolder makes users pick the wrong folder in Chrome's folder dialog.
+  fs.rmSync(extensionDir(), { recursive: true, force: true });
   fs.cpSync(EXTENSION_SOURCE, extensionDir(), { recursive: true });
 }
 
