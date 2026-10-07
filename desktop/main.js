@@ -656,7 +656,6 @@ ipcMain.handle('license:activate', (_event, code) => {
   if (result.ok) applyLicense(result);
   return result;
 });
-ipcMain.handle('ext:openFolder', () => shell.openPath(extensionDir()));
 ipcMain.handle('data:openFolder', () => shell.openPath(dataDir()));
 ipcMain.handle('clip:copy', (_event, text) => clipboard.writeText(String(text)));
 

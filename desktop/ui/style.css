@@ -86,6 +86,20 @@ body.panel { background: var(--card); border: 1px solid #b8bec8; overflow: hidde
 .hint { padding: 6px 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
 [hidden] { display: none !important; }
 
+/* extension guide */
+.guidehead { display: flex; align-items: center; gap: 10px; }
+.guidehead h2 { flex: 1; margin: 0; }
+.gstep { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; margin-top: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; }
+.gnum { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-bg); color: var(--accent); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.gstep p { margin: 2px 0 0; font-size: 13px; }
+.copyrow { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.copyrow code { flex: 1; min-width: 0; padding: 7px 10px; border-radius: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.copyrow button { min-width: 104px; }
+.gwarn { margin-top: 8px; padding: 6px 10px; border-radius: 8px; background: var(--warn-bg); color: var(--warn); font-size: 13px; }
+.gmore { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.gmore summary { cursor: pointer; }
+.gmore p { margin: 6px 0 0 16px; }
+
 /* main window layout */
 .bar { display: flex; align-items: center; gap: 8px; padding: 8px 16px; }
 .check { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; color: var(--muted); cursor: pointer; }

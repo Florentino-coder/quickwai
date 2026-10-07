@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "QuickWai Note Reader",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "อ่านชื่อลูกค้าจากโน้ตใน LINE OA แล้วส่งให้โปรแกรม QuickWai บนเครื่องนี้",
   "permissions": [
     "storage",

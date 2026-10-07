@@ -247,9 +247,16 @@ const openGuide = () => $('guide').showModal();
 $('extStatus').onclick = openGuide;
 $('guideBtn').onclick = openGuide;
 $('closeGuide').onclick = () => $('guide').close();
-$('copyUrl').onclick = () => qr.copy('chrome://extensions');
-$('copyDir').onclick = () => qr.copy($('extDir').textContent);
-$('openDir').onclick = () => qr.openExtensionFolder();
+// A copy button shows "คัดลอกแล้ว" for a moment, so the user knows the click worked.
+function copyButton(id, text) {
+  $(id).onclick = () => {
+    qr.copy(text());
+    $(id).textContent = 'คัดลอกแล้ว ✓';
+    setTimeout(() => { $(id).textContent = 'คัดลอก'; }, 1500);
+  };
+}
+copyButton('copyUrl', () => 'chrome://extensions');
+copyButton('copyDir', () => $('extDir').textContent);
 
 qr.onData((data) => { replies = data.replies; categories = data.categories; render(); });
 qr.onStatus(renderStatus);

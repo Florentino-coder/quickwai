@@ -95,18 +95,57 @@
   </dialog>
 
   <dialog id="guide">
-    <h2>ติดตั้ง Extension ใน Chrome</h2>
-    <p><span id="guideStatus" class="pill"></span></p>
-    <ol>
-      <li>เปิด Chrome แล้ววาง <code>chrome://extensions</code> ในช่องที่อยู่ <button id="copyUrl" class="link">คัดลอก</button></li>
-      <li>เปิดสวิตช์ <b>โหมดนักพัฒนาซอฟต์แวร์</b> (Developer mode) มุมขวาบน</li>
-      <li>กด <b>โหลดส่วนขยายที่คลายการแพคแล้ว</b> (Load unpacked) แล้วเลือกโฟลเดอร์นี้<br><code id="extDir"></code> <button id="copyDir" class="link">คัดลอก</button> <button id="openDir" class="link">เปิดโฟลเดอร์</button><br><span class="muted">เลือกโฟลเดอร์ชื่อ <b>extension</b> หน้าต่างเลือกโฟลเดอร์จะดูว่างเปล่า ถูกแล้ว กด Select Folder ได้เลย</span></li>
-      <li>เปิดหรือรีเฟรชหน้า <code>chat.line.biz</code> แล้วเปิดแถบโน้ตด้านข้างของแชท</li>
-      <li>สถานะด้านบนต้องเปลี่ยนเป็น "Extension เชื่อมต่อแล้ว"</li>
-    </ol>
-    <p class="muted">ติดตั้งครั้งเดียว หลังจากนั้น Extension อัปเดตตามโปรแกรมเอง</p>
-    <p class="muted"><b>ใช้ Chrome ไม่ระบุตัวตน:</b> ในหน้า chrome://extensions กด "รายละเอียด" ของ QuickWai Note Reader แล้วเปิด "อนุญาตในโหมดไม่ระบุตัวตน"</p>
-    <p class="muted"><b>เชื่อมต่อแล้วแต่ไม่พบชื่อ:</b> กดไอคอน QuickWai บนแถบ Chrome กด "เลือกแถบโน้ตเอง" แล้วคลิกที่แถบโน้ตในหน้าแชท</p>
+    <div class="guidehead">
+      <h2>ติดตั้ง Extension ใน Chrome</h2>
+      <span id="guideStatus" class="pill"></span>
+    </div>
+    <p class="muted">ทำ 4 ขั้น ครั้งเดียว ราว 2 นาที หลังจากนั้น Extension อัปเดตตามโปรแกรมเอง</p>
+
+    <div class="gstep">
+      <div class="gnum">1</div>
+      <div>
+        <b>เปิดหน้าส่วนขยายของ Chrome</b>
+        <p>กด คัดลอก แล้วเปิด Chrome วางในช่องที่อยู่ด้านบน กด Enter</p>
+        <div class="copyrow"><code>chrome://extensions</code><button id="copyUrl">คัดลอก</button></div>
+      </div>
+    </div>
+
+    <div class="gstep">
+      <div class="gnum">2</div>
+      <div>
+        <b>เปิดสวิตช์ Developer mode</b>
+        <p>อยู่มุมขวาบนของหน้านั้น กด 1 ครั้งให้เป็นสีฟ้า</p>
+        <p class="muted">Chrome ภาษาไทย: โหมดนักพัฒนาซอฟต์แวร์</p>
+      </div>
+    </div>
+
+    <div class="gstep">
+      <div class="gnum">3</div>
+      <div>
+        <b>กด Load unpacked แล้วเลือกโฟลเดอร์</b>
+        <p>กด คัดลอก วางในช่องยาวบนสุดของหน้าต่างเลือกโฟลเดอร์ กด Enter แล้วกด Select Folder</p>
+        <p class="muted">Chrome ภาษาไทย: โหลดส่วนขยายที่คลายการแพคแล้ว</p>
+        <div class="copyrow"><code id="extDir"></code><button id="copyDir">คัดลอก</button></div>
+        <div class="gwarn">หน้าต่างดูว่างเปล่า ถูกแล้ว กด Select Folder ได้เลย</div>
+      </div>
+    </div>
+
+    <div class="gstep">
+      <div class="gnum">4</div>
+      <div>
+        <b>เปิดหน้า LINE OA แล้วกด F5</b>
+        <p>เปิดแชทลูกค้า 1 คน ป้ายด้านบนเปลี่ยนเป็นสีเขียว = เสร็จ</p>
+      </div>
+    </div>
+
+    <details class="gmore">
+      <summary>ใช้ Chrome ไม่ระบุตัวตน</summary>
+      <p>ในหน้า chrome://extensions กด "รายละเอียด" (Details) ของ QuickWai Note Reader แล้วเปิด "อนุญาตในโหมดไม่ระบุตัวตน" (Allow in Incognito)</p>
+    </details>
+    <details class="gmore">
+      <summary>เชื่อมต่อแล้วแต่ไม่พบชื่อ</summary>
+      <p>กดไอคอน QuickWai บนแถบ Chrome กด "เลือกแถบโน้ตเอง" แล้วคลิกที่แถบโน้ตในหน้าแชท</p>
+    </details>
     <div class="actions"><span class="grow"></span><button id="closeGuide">ปิด</button></div>
   </dialog>
 
