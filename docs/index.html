@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คู่มือ QuickWai</title>
+<style>
+  :root { --bg: #f6f7f9; --card: #fff; --text: #1f2933; --muted: #6b7280; --line: #e2e5ea; --accent: #2563eb; --accent-bg: #e8effd; --mark: #f59e0b; --ok: #0a7d3c; --ok-bg: #e3f6ea; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 "Segoe UI", "Leelawadee UI", "Noto Sans Thai", sans-serif; }
+  .wrap { max-width: 800px; margin: 0 auto; padding: 0 16px 48px; }
+  .hero { display: flex; align-items: center; gap: 14px; padding: 28px 0 8px; }
+  .hero img { width: 56px; height: 56px; }
+  .hero h1 { margin: 0; font-size: 26px; line-height: 1.2; }
+  .hero span { font-size: 12px; letter-spacing: 0.14em; color: var(--muted); }
+  .lead { color: var(--muted); margin: 4px 0 16px; }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  nav a { padding: 6px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--accent); text-decoration: none; font-size: 14px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-top: 16px; }
+  section > h2 { margin: 0 0 4px; font-size: 20px; }
+  section > h2 small { display: inline-block; margin-right: 8px; padding: 2px 10px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; vertical-align: 2px; }
+  section > p.sub { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+  h3 { margin: 22px 0 6px; font-size: 16px; }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .step:first-of-type { border-top: 0; }
+  .num { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-bg); color: var(--accent); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .step p { margin: 0 0 8px; }
+  .step p:last-child { margin-bottom: 0; }
+  b.k, kbd { font: 600 13px Consolas, monospace; padding: 2px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); white-space: nowrap; }
+  b.btn { padding: 1px 8px; border-radius: 6px; background: var(--accent-bg); color: var(--accent); font-weight: 600; white-space: nowrap; }
+  img.shot { display: block; width: 100%; max-width: 560px; border: 1px solid var(--line); border-radius: 10px; margin-top: 8px; }
+  img.shot.small { max-width: 360px; }
+  .note { padding: 10px 14px; border-radius: 10px; background: #fdf0d5; color: #92400e; font-size: 14px; margin-top: 10px; }
+  .tip { padding: 10px 14px; border-radius: 10px; background: var(--ok-bg); color: var(--ok); font-size: 14px; margin-top: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td, th { text-align: left; padding: 8px 10px; border-top: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; border-top: 0; }
+  td:first-child { width: 42%; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; letter-spacing: 0.1em; margin-top: 24px; }
+
+  /* simplified drawings of other programs */
+  .mock { position: relative; max-width: 560px; margin-top: 8px; border: 1px solid #c9ced6; border-radius: 10px; overflow: hidden; background: #fff; font-size: 13px; line-height: 1.45; }
+  .mock::after { content: "ภาพจำลอง"; position: absolute; right: 8px; bottom: 4px; font-size: 10px; color: #9aa1ab; }
+  .mock .bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #eef0f3; border-bottom: 1px solid #d9dde3; }
+  .mock .url { flex: 1; padding: 4px 12px; border-radius: 999px; background: #fff; font-family: Consolas, monospace; }
+  .mock .body { padding: 14px; }
+  .hl { outline: 3px solid var(--mark); outline-offset: 3px; border-radius: 6px; }
+  .mbtn { display: inline-block; padding: 5px 12px; border: 1px solid #c9ced6; border-radius: 999px; color: #1a56c4; background: #fff; }
+  .toggle { display: inline-block; width: 34px; height: 18px; border-radius: 999px; background: #1a73e8; position: relative; vertical-align: middle; }
+  .toggle::after { content: ""; position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+  .blue { background: #0b62c4; color: #fff; }
+  .blue .body { padding: 18px; }
+  .blue u { text-underline-offset: 3px; }
+  .winbtn { display: inline-block; padding: 5px 16px; border: 1px solid #fff; margin-right: 6px; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .grow { flex: 1; }
+  .notecard { border: 1px solid #d9dde3; border-radius: 8px; padding: 10px 12px; margin-top: 8px; }
+  .green { background: #06c755; color: #fff; border-color: #06c755; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <img src="img/icon.png" alt="">
+    <div><h1>คู่มือ QuickWai</h1><span>by Florentino356</span></div>
+  </div>
+  <p class="lead">ตอบแชท LINE OA ด้วยข้อความและรูปที่เตรียมไว้ กดปุ่มเดียว ข้อความพร้อมชื่อลูกค้าลงช่องแชทให้ ตั้งค่าครั้งเดียว ใช้เวลาราว 10 นาที</p>
+  <nav>
+    <a href="#install">1 ติดตั้งโปรแกรม</a>
+    <a href="#extension">2 ติดตั้ง Extension</a>
+    <a href="#use">3 ใช้งาน</a>
+    <a href="#help">แก้ปัญหา</a>
+  </nav>
+
+  <section id="install">
+    <h2><small>ส่วนที่ 1</small>ติดตั้งโปรแกรม</h2>
+    <p class="sub">ทำครั้งเดียวต่อเครื่อง</p>
+
+    <div class="step"><div class="num">1</div><div>
+      <p>ดับเบิลคลิกไฟล์ <b class="k">QuickWai-Setup</b> ที่ได้รับ</p>
+    </div></div>
+
+    <div class="step"><div class="num">2</div><div>
+      <p>ถ้า Windows ขึ้นหน้าต่างสีฟ้า กด <b class="btn">More info</b> แล้วกด <b class="btn">Run anyway</b></p>
+      <div class="mock blue"><div class="body">
+        <div style="font-size:17px;margin-bottom:6px">Windows protected your PC</div>
+        <div>Microsoft Defender SmartScreen prevented an unrecognized app from starting. <u class="hl">More info</u></div>
+        <div style="text-align:right;margin-top:16px"><span class="winbtn hl">Run anyway</span><span class="winbtn">Don't run</span></div>
+      </div></div>
+      <div class="note">โปรแกรมป้องกันไวรัสบางตัวอาจเตือนหรือกักไฟล์ ถ้าติดตั้งไม่ได้ ให้แจ้งผู้ดูแล</div>
+    </div></div>
+
+    <div class="step"><div class="num">3</div><div>
+      <p>โปรแกรมเปิดเอง ขึ้นหน้า <b>ใส่โค้ดใช้งาน</b> กด <b class="btn">คัดลอกรหัสเครื่อง</b> แล้วส่งรหัสพร้อมชื่อของคุณให้ผู้ดูแล</p>
+      <img class="shot small" src="img/license.png" alt="หน้าใส่โค้ดใช้งาน มีรหัสเครื่องและช่องวางโค้ด">
+    </div></div>
+
+    <div class="step"><div class="num">4</div><div>
+      <p>ผู้ดูแลส่งโค้ดกลับมา วางโค้ดในช่อง แล้วกด <b class="btn">เริ่มใช้งาน</b></p>
+      <p>เข้าโปรแกรมได้แล้ว ป้ายมุมขวาบนยังเป็น "Extension ไม่ได้เชื่อมต่อ" ทำส่วนที่ 2 ต่อ</p>
+      <img class="shot" src="img/main-off.png" alt="หน้าหลักของ QuickWai ป้ายมุมขวาบนขึ้นว่า Extension ไม่ได้เชื่อมต่อ">
+    </div></div>
+  </section>
+
+  <section id="extension">
+    <h2><small>ส่วนที่ 2</small>ติดตั้ง Extension ใน Chrome</h2>
+    <p class="sub">Extension อ่านชื่อลูกค้าจากโน้ตใน LINE OA ติดตั้งครั้งเดียว หลังจากนั้นอัปเดตเอง</p>
+
+    <div class="step"><div class="num">1</div><div>
+      <p>ในโปรแกรม QuickWai กดป้าย <b class="btn">Extension ไม่ได้เชื่อมต่อ</b> มุมขวาบน จะมีหน้าต่างบอกขั้นตอน เปิดค้างไว้</p>
+      <img class="shot" src="img/ext-guide.png" alt="หน้าต่างบอกขั้นตอนติดตั้ง Extension ในโปรแกรม QuickWai">
+    </div></div>
+
+    <div class="step"><div class="num">2</div><div>
+      <p>เปิด Chrome พิมพ์ <b class="k">chrome://extensions</b> ในช่องที่อยู่ด้านบน กด Enter แล้วเปิดสวิตช์ <b class="btn">Developer mode</b> มุมขวาบน</p>
+      <div class="mock">
+        <div class="bar"><span class="url hl">chrome://extensions</span></div>
+        <div class="body row"><b>Extensions</b><span class="grow"></span><span class="hl">Developer mode <span class="toggle"></span></span></div>
+      </div>
+      <p style="margin-top:8px;font-size:14px;color:var(--muted)">Chrome ภาษาไทยใช้ชื่อ "โหมดนักพัฒนาซอฟต์แวร์"</p>
+    </div></div>
+
+    <div class="step"><div class="num">3</div><div>
+      <p>กดปุ่ม <b class="btn">Load unpacked</b> ที่ขึ้นมาด้านซ้ายบน</p>
+      <div class="mock"><div class="body row" style="gap:8px">
+        <span class="mbtn hl">Load unpacked</span><span class="mbtn">Pack extension</span><span class="mbtn">Update</span>
+      </div></div>
+      <p style="margin-top:8px;font-size:14px;color:var(--muted)">Chrome ภาษาไทยใช้ชื่อ "โหลดส่วนขยายที่คลายการแพคแล้ว"</p>
+    </div></div>
+
+    <div class="step"><div class="num">4</div><div>
+      <p>กลับไปที่หน้าต่างของ QuickWai กด <b class="btn">คัดลอก</b> หลังที่อยู่โฟลเดอร์ในข้อ 3</p>
+      <p>วางในช่องที่อยู่ด้านบนของหน้าต่างเลือกโฟลเดอร์ กด Enter แล้วกด <b class="btn">Select Folder</b></p>
+    </div></div>
+
+    <div class="step"><div class="num">5</div><div>
+      <p>เปิดหน้า LINE OA ถ้าเปิดอยู่แล้วให้กด <b class="k">F5</b> เปิดแชทลูกค้า แล้วเปิดแถบ <b>โน้ต</b> ด้านขวา</p>
+      <p>ป้ายมุมขวาบนของ QuickWai เปลี่ยนเป็นสีเขียว และขึ้นชื่อลูกค้า</p>
+      <img class="shot" src="img/main-on.png" alt="หน้าหลักของ QuickWai ป้ายขึ้นว่า Extension เชื่อมต่อแล้ว และลูกค้า มายด์">
+    </div></div>
+
+    <h3>ใช้ Chrome แบบไม่ระบุตัวตน (Incognito)</h3>
+    <p style="margin:0">ในหน้า <b class="k">chrome://extensions</b> กด <b class="btn">Details</b> ของ QuickWai Note Reader แล้วเปิดสวิตช์ <b class="btn">Allow in Incognito</b></p>
+    <div class="mock"><div class="body">
+      <div class="row"><img src="img/icon.png" alt="" width="32" height="32"><div><b>QuickWai Note Reader</b><br><span style="color:#6b7280">อ่านชื่อลูกค้าจากโน้ตใน LINE OA</span></div></div>
+      <div class="row" style="margin-top:12px"><span class="mbtn hl">Details</span><span class="mbtn">Remove</span><span class="grow"></span><span class="toggle"></span></div>
+    </div></div>
+    <div class="note">Chrome อาจเตือน "Disable developer mode extensions" ตอนเปิด ให้กดกากบาทปิดคำเตือน อย่ากดปิด Extension</div>
+  </section>
+
+  <section id="use">
+    <h2><small>ส่วนที่ 3</small>ใช้งาน</h2>
+    <p class="sub">เตรียมโน้ต สร้าง Reply แล้วกดปุ่มเดียวตอนตอบ</p>
+
+    <h3>เตรียมโน้ตลูกค้า</h3>
+    <p style="margin:0">ในแถบโน้ตของแชท เขียนคำว่า <b>ชื่อ</b> ตามด้วยชื่อลูกค้า</p>
+    <div class="mock" style="max-width:300px"><div class="body">
+      <div class="row"><b>โน้ต 1/1</b><span class="grow"></span><span style="color:#06c755;font-size:18px">+</span></div>
+      <div class="notecard hl">ชื่อ มายด์</div>
+    </div></div>
+    <div class="note">QuickWai อ่านเฉพาะคำที่ตามหลังคำว่า "ชื่อ" โน้ตที่เขียนแค่ "มายด์" โปรแกรมจะไม่พบชื่อ</div>
+
+    <h3>สร้าง Reply</h3>
+    <div class="step"><div class="num">1</div><div>
+      <p>กด <b class="btn">+ เพิ่ม Reply</b> ใส่ชื่อ Reply และเลือกหมวด</p>
+    </div></div>
+    <div class="step"><div class="num">2</div><div>
+      <p>คลิกช่อง <b>Hotkey</b> แล้วกดปุ่มที่ต้องการ เช่น <b class="k">Alt</b> + <b class="k">4</b></p>
+    </div></div>
+    <div class="step"><div class="num">3</div><div>
+      <p>พิมพ์ข้อความ ตรงที่ต้องการชื่อลูกค้า กด <b class="btn">แทรก {ชื่อ}</b> ต้องการส่งรูปด้วย กด <b class="btn">+ เพิ่มรูป</b> ใส่ได้หลายรูป แล้วกด <b class="btn">บันทึก</b></p>
+      <img class="shot" src="img/editor.png" alt="หน้าเพิ่ม Reply มีช่องชื่อ หมวด Hotkey ข้อความ และรูป">
+    </div></div>
+
+    <h3>ตอบลูกค้า</h3>
+    <div class="step"><div class="num">1</div><div>
+      <p>เปิดแชทลูกค้าใน LINE OA แล้ว<b>คลิกที่ช่องพิมพ์ข้อความ</b></p>
+    </div></div>
+    <div class="step"><div class="num">2</div><div>
+      <p>กด Hotkey ของ Reply เช่น <b class="k">Alt</b> + <b class="k">1</b> ข้อความพร้อมชื่อลูกค้าลงช่องพิมพ์ให้</p>
+    </div></div>
+    <div class="step"><div class="num">3</div><div>
+      <p>ตรวจข้อความ แล้วกด <b class="k">Enter</b> เพื่อส่ง</p>
+      <p>ถ้า Reply มีรูป LINE จะถามยืนยัน กด <b class="btn">ส่ง</b></p>
+      <div class="mock" style="max-width:420px"><div class="body">
+        <b>ต้องการส่งไฟล์ในห้องแชทนี้หรือไม่</b>
+        <div class="row" style="margin-top:12px;gap:8px"><span style="width:64px;height:64px;border-radius:8px;background:#fde9a8;display:inline-block"></span><span style="width:64px;height:64px;border-radius:8px;background:#c9dcfb;display:inline-block"></span></div>
+        <div style="text-align:right;margin-top:12px"><span class="mbtn" style="color:#1f2933;border-radius:6px">ยกเลิก</span> <span class="mbtn green hl">ส่ง</span></div>
+      </div></div>
+      <div class="tip">โปรแกรมวางข้อความให้ แต่ไม่กดส่งแทน คุณตรวจและกดส่งเองทุกครั้ง</div>
+    </div></div>
+
+    <h3>จำ Hotkey ไม่ได้ ใช้ค้นหาด่วน</h3>
+    <p style="margin:0">คลิกช่องพิมพ์ข้อความในแชท กด <b class="k">Ctrl</b> + <b class="k">Space</b> พิมพ์คำค้น แล้วกด <b class="k">Enter</b></p>
+    <img class="shot small" src="img/panel.png" alt="หน้าค้นหาด่วน แสดงชื่อลูกค้าด้านบน ช่องค้นหา และรายการ Reply">
+    <table style="margin-top:12px">
+      <tr><th>ปุ่ม</th><th>ทำอะไร</th></tr>
+      <tr><td><kbd>Enter</kbd></td><td>วางข้อความและรูปทั้งหมด</td></tr>
+      <tr><td><kbd>Shift</kbd> + <kbd>Enter</kbd></td><td>เลือกรูปที่จะส่งก่อน</td></tr>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>1</kbd> ถึง <kbd>9</kbd></td><td>เลือกรายการตามลำดับ</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>ปิด</td></tr>
+    </table>
+    <div class="note">แถบบนขึ้น "ไม่พบชื่อในโน๊ต" โปรแกรมจะถามชื่อ พิมพ์ชื่อแล้วกด Enter หรือกด Enter เปล่าเพื่อส่งแบบไม่มีชื่อ</div>
+
+    <h3>เรื่องที่ควรรู้</h3>
+    <ul>
+      <li>Hotkey ของ Reply ใช้ได้เฉพาะตอนหน้าแชท LINE OA อยู่ด้านหน้า</li>
+      <li>กดกากบาทปิดหน้าต่าง โปรแกรมยังทำงานอยู่ ไอคอนอยู่มุมขวาล่างของจอ</li>
+      <li>โปรแกรมเปิดเองตอนเปิดเครื่อง ปิดได้ที่ <b class="btn">ตั้งค่าและข้อมูล</b></li>
+      <li>โค้ดใช้งานมีวันหมดอายุ 7 วันสุดท้ายมีแถบสีเหลืองเตือน ส่งรหัสเครื่องให้ผู้ดูแลเพื่อขอโค้ดใหม่</li>
+      <li>ส่งชุด Reply ให้เพื่อนได้ กด <b class="btn">ส่งออก</b> เพื่อนกด <b class="btn">นำเข้า</b></li>
+    </ul>
+    <img class="shot" src="img/about.png" alt="หน้าตั้งค่าและข้อมูล มีสิทธิ์ใช้งาน ส่งออก นำเข้า เวอร์ชัน และปุ่มออกจากโปรแกรม">
+  </section>
+
+  <section id="help">
+    <h2>แก้ปัญหา</h2>
+    <table>
+      <tr><th>อาการ</th><th>วิธีแก้</th></tr>
+      <tr><td>ป้ายขึ้น "Extension ไม่ได้เชื่อมต่อ"</td><td>เปิดหน้า LINE OA แล้วกด F5 ถ้ายังไม่ขึ้น ตรวจว่า Extension เปิดอยู่ในหน้า chrome://extensions</td></tr>
+      <tr><td>ขึ้น "ไม่พบแถบโน้ต"</td><td>เปิดแถบโน้ตด้านขวาของแชท ถ้ายังไม่พบ กดไอคอน QuickWai บนแถบ Chrome กด "เลือกแถบโน้ตเอง" แล้วคลิกที่แถบโน้ต</td></tr>
+      <tr><td>ขึ้น "ไม่พบชื่อในโน๊ต"</td><td>ตรวจว่าโน้ตมีคำว่า "ชื่อ" นำหน้า เช่น ชื่อ มายด์</td></tr>
+      <tr><td>กด Hotkey แล้วไม่มีอะไรเกิดขึ้น</td><td>คลิกช่องพิมพ์ข้อความในแชทก่อน และตรวจว่าป้าย Extension เป็นสีเขียว</td></tr>
+      <tr><td>ขึ้น "วางไม่สำเร็จ"</td><td>ข้อความอยู่ใน Clipboard แล้ว คลิกช่องพิมพ์ข้อความ กด Ctrl + V</td></tr>
+      <tr><td>ใช้ Incognito แล้วชื่อไม่ขึ้น</td><td>เปิดสวิตช์ Allow in Incognito ตามส่วนที่ 2</td></tr>
+    </table>
+  </section>
+
+  <footer>QuickWai by Florentino356</footer>
+</div>
+</body>
+</html>

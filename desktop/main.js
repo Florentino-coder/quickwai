@@ -9,7 +9,8 @@ const license = require('./license.js');
 const { checkForUpdate } = require('./updater.js');
 const { needsName, fillName } = require('./ui/shared.js');
 
-const PORT = 38457;
+// QUICKWAI_PORT lets a development copy run next to the installed app.
+const PORT = Number(process.env.QUICKWAI_PORT) || 38457;
 const PANEL_HOTKEY = 'Control+Space';
 const EXTENSION_SOURCE = path.join(__dirname, '..', 'extension');
 const ASSETS = path.join(__dirname, 'assets');
