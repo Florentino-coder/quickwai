@@ -57,6 +57,12 @@
   .grow { flex: 1; }
   .notecard { border: 1px solid #d9dde3; border-radius: 8px; padding: 10px 12px; margin-top: 8px; }
   .green { background: #06c755; color: #fff; border-color: #06c755; border-radius: 6px; }
+  .badge { display: inline-block; margin: 6px 8px 0 0; padding: 8px 14px; border-radius: 12px; border: 2px solid; font-size: 13px; line-height: 1.5; vertical-align: top; }
+  .badge b { display: block; }
+  .badge.bad { background: #fdecec; border-color: #d93025; color: #8c1d18; }
+  .badge.warn { background: #fff4d6; border-color: #e6a100; color: #7a4b00; }
+  .badge.good { background: #e3f6ea; border-color: #34a853; color: #0a6b32; border-width: 1px; border-radius: 999px; padding: 4px 14px; }
+  video { display: block; width: 100%; border-radius: 10px; border: 1px solid var(--line); background: #000; }
 </style>
 </head>
 <body>
@@ -68,11 +74,18 @@
   </div>
   <p class="lead">ตอบแชท LINE OA ด้วยข้อความและรูปที่เตรียมไว้ กดปุ่มเดียว ข้อความพร้อมชื่อลูกค้าลงช่องแชทให้ ตั้งค่าครั้งเดียว ใช้เวลาราว 10 นาที</p>
   <nav>
+    <a href="#video">วิดีโอ</a>
     <a href="#install">1 ติดตั้งโปรแกรม</a>
     <a href="#extension">2 ติดตั้ง Extension</a>
     <a href="#use">3 ใช้งาน</a>
     <a href="#help">แก้ปัญหา</a>
   </nav>
+
+  <section id="video">
+    <h2>วิดีโอสอนทุกขั้นตอน</h2>
+    <p class="sub">ดูวิดีโอก่อน แล้วทำตามทีละส่วนด้านล่าง วิดีโอไม่มีเสียง</p>
+    <video src="guide/QuickWai-guide.mp4" controls preload="metadata"></video>
+  </section>
 
   <section id="install">
     <h2><small>ส่วนที่ 1</small>ติดตั้งโปรแกรม</h2>
@@ -156,12 +169,25 @@
     <p class="sub">เตรียมโน้ต สร้าง Reply แล้วกดปุ่มเดียวตอนตอบ</p>
 
     <h3>เตรียมโน้ตลูกค้า</h3>
-    <p style="margin:0">ในแถบโน้ตของแชท เขียนคำว่า <b>ชื่อ</b> ตามด้วยชื่อลูกค้า</p>
+    <p style="margin:0">ในแถบโน้ตของแชท เขียนคำว่า <b>ชื่อ</b> ตามด้วยชื่อลูกค้า หรือขึ้นต้นบรรทัดด้วย <b>พี่</b> เช่น พี่บราวน์</p>
     <div class="mock" style="max-width:300px"><div class="body">
       <div class="row"><b>โน้ต 1/1</b><span class="grow"></span><span style="color:#06c755;font-size:18px">+</span></div>
       <div class="notecard hl">ชื่อ มายด์</div>
     </div></div>
-    <div class="note">QuickWai อ่านเฉพาะคำที่ตามหลังคำว่า "ชื่อ" โน้ตที่เขียนแค่ "มายด์" โปรแกรมจะไม่พบชื่อ</div>
+    <div class="note">QuickWai อ่านเฉพาะคำที่ตามหลังคำว่า "ชื่อ" หรือบรรทัดที่ขึ้นต้นด้วย "พี่" โน้ตที่เขียนแค่ "มายด์" โปรแกรมจะไม่พบชื่อ</div>
+
+    <h3>ใส่แท็ก และดูป้ายเตือนบนหน้าแชท</h3>
+    <p style="margin:0">ทุกแชทต้องมี 2 อย่างก่อนตอบ: โน้ตชื่อลูกค้า และแท็ก QuickWai ขึ้นป้ายมุมขวาบนของช่องแชทให้เห็นว่าขาดอะไร</p>
+    <div>
+      <span class="badge bad"><b>QuickWai: ยังไม่มีโน้ตชื่อ และ แท็ก</b>✗ โน้ตชื่อลูกค้า: ยังไม่มี<br>✗ แท็ก: ยังไม่ใส่</span>
+      <span class="badge warn"><b>QuickWai: ยังไม่มีแท็ก</b>✓ โน้ตชื่อลูกค้า: มายด์<br>✗ แท็ก: ยังไม่ใส่</span>
+      <span class="badge good">✓ QuickWai: มายด์ · มีแท็ก</span>
+    </div>
+    <ul>
+      <li>แดง: ยังไม่มีโน้ตชื่อ เหลือง: ยังไม่ใส่แท็ก เขียว: ครบแล้ว</li>
+      <li>ลากป้ายไปวางตรงไหนก็ได้</li>
+      <li>ปิดป้าย: กดไอคอน QuickWai บนแถบ Chrome แล้วเอาติ๊ก "แสดงป้ายบนหน้าแชท" ออก</li>
+    </ul>
 
     <h3>สร้าง Reply</h3>
     <div class="step"><div class="num">1</div><div>
@@ -210,6 +236,7 @@
       <li>Hotkey ของ Reply ใช้ได้เฉพาะตอนหน้าแชท LINE OA อยู่ด้านหน้า</li>
       <li>กดกากบาทปิดหน้าต่าง โปรแกรมยังทำงานอยู่ ไอคอนอยู่มุมขวาล่างของจอ</li>
       <li>โปรแกรมเปิดเองตอนเปิดเครื่อง ปิดได้ที่ <b class="btn">ตั้งค่าและข้อมูล</b></li>
+      <li>โปรแกรมอัปเดตเอง ต้องการอัปเดตทันที กด <b class="btn">ตั้งค่าและข้อมูล</b> แล้วกด <b class="btn">ตรวจอัปเดต</b> โปรแกรมจะเปิดใหม่เอง</li>
       <li>โค้ดใช้งานมีวันหมดอายุ 7 วันสุดท้ายมีแถบสีเหลืองเตือน ส่งรหัสเครื่องให้ผู้ดูแลเพื่อขอโค้ดใหม่</li>
       <li>ส่งชุด Reply ให้เพื่อนได้ กด <b class="btn">ส่งออก</b> เพื่อนกด <b class="btn">นำเข้า</b></li>
     </ul>
