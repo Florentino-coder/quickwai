@@ -94,6 +94,7 @@ button.pill, #licenseNote { cursor: pointer; }
 .card kbd { min-width: 76px; text-align: center; }
 .card kbd.none { color: var(--muted); border-style: dashed; background: none; }
 #notice { color: var(--warn); font-size: 13px; }
+#notice.clickable { cursor: pointer; text-decoration: underline; }
 dialog h3 { margin: 16px 0 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
 .rows { display: grid; grid-template-columns: 130px 1fr auto; gap: 8px 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
 .rows > :nth-child(3n + 1) { color: var(--muted); font-size: 13px; }

@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld('qr', {
   openLicense: () => ipcRenderer.invoke('license:open'),
   closeLicense: () => ipcRenderer.invoke('license:close'),
   setSettings: (settings) => ipcRenderer.invoke('settings:set', settings),
+  restart: () => ipcRenderer.invoke('app:restart'),
   quit: () => ipcRenderer.invoke('app:quit'),
   copy: (text) => ipcRenderer.invoke('clip:copy', text),
   onData: on('data'),

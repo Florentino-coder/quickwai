@@ -500,6 +500,13 @@ function quit() {
   app.quit();
 }
 
+// Starts the app again so a downloaded update takes effect. The window shows even if this run began hidden.
+function restart() {
+  quitting = true;
+  app.relaunch({ args: process.argv.slice(1).filter((arg) => arg !== '--hidden') });
+  app.quit();
+}
+
 function setPaused(value) {
   paused = value;
   syncPanelHotkey();
@@ -575,6 +582,7 @@ ipcMain.handle('panel:use', async (_event, { id, name, imageIds }) => {
 
 ipcMain.handle('panel:hide', () => panel.hide());
 ipcMain.handle('app:quit', quit);
+ipcMain.handle('app:restart', restart);
 ipcMain.handle('update:check', runUpdateCheck);
 ipcMain.handle('data:export', exportData);
 ipcMain.handle('data:import', importData);

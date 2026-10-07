@@ -76,7 +76,9 @@ function renderStatus(status) {
   $('panelKey').textContent = status.paused ? 'หยุดชั่วคราว' : hotkeyLabel(status.panelHotkey);
 
   const notices = [];
-  if (status.updateReady) notices.push(`อัปเดต ${status.updateReady} พร้อมแล้ว ปิดแล้วเปิดโปรแกรมใหม่เพื่อใช้`);
+  if (status.updateReady) notices.push(`อัปเดต ${status.updateReady} พร้อมแล้ว คลิกที่นี่เพื่อเปิดโปรแกรมใหม่`);
+  $('notice').className = status.updateReady ? 'grow clickable' : 'grow';
+  $('notice').onclick = status.updateReady ? () => qr.restart() : null;
   if (status.serverError) notices.push(status.serverError);
   if (status.failedHotkeys.length) notices.push(`Hotkey ใช้ไม่ได้: ${status.failedHotkeys.map(hotkeyLabel).join(', ')}`);
   $('notice').textContent = notices.join(' · ');
@@ -208,7 +210,10 @@ $('updateBtn').onclick = async () => {
   $('updateBtn').textContent = 'ตรวจอัปเดต';
   if (result.status === 'current') alert('ใช้เวอร์ชันล่าสุดอยู่แล้ว');
   if (result.status === 'error') alert(`ตรวจอัปเดตไม่ได้: ${result.message}`);
-  if (result.status === 'updated') alert(`อัปเดต ${result.version} พร้อมแล้ว ปิดแล้วเปิดโปรแกรมใหม่เพื่อใช้`);
+  if (result.status === 'updated') {
+    alert(`โหลดอัปเดต ${result.version} แล้ว โปรแกรมจะเปิดใหม่เอง`);
+    qr.restart();
+  }
 };
 
 // ---- extension guide -----------------------------------------------------
