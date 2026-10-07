@@ -50,6 +50,9 @@ test('fillName inserts the name or removes the field', () => {
   assert.equal(fillName(text, 'มายด์'), 'สวัสดีครับคุณ มายด์ ฝากเงินได้ตามขั้นตอนด้านล่างครับ');
   assert.equal(fillName(text, ''), 'สวัสดีครับ ฝากเงินได้ตามขั้นตอนด้านล่างครับ');
   assert.equal(fillName('คุณ {ชื่อ} รบกวนส่งสลิปครับ', ''), 'รบกวนส่งสลิปครับ');
+  const greet = '💌 สวัสดีค่ะ {ชื่อ} น้องขนม JINBAO356 ยินดีให้บริการค่ะ 💌';
+  assert.equal(fillName(greet, 'พี่มายด์'), '💌 สวัสดีค่ะ พี่มายด์ น้องขนม JINBAO356 ยินดีให้บริการค่ะ 💌');
+  assert.equal(fillName(greet, ''), '💌 สวัสดีค่ะ น้องขนม JINBAO356 ยินดีให้บริการค่ะ 💌');
   assert.equal(fillName(text, 'พี่บราวน์'), 'สวัสดีครับพี่บราวน์ ฝากเงินได้ตามขั้นตอนด้านล่างครับ');
 
 });

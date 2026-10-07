@@ -7,7 +7,7 @@ const readline = require('readline');
 const { spawn, execFileSync } = require('child_process');
 const license = require('./license.js');
 const { checkForUpdate } = require('./updater.js');
-const { needsName, fillName } = require('./ui/shared.js');
+const { fillName } = require('./ui/shared.js');
 
 // QUICKWAI_PORT lets a development copy run next to the installed app.
 const PORT = Number(process.env.QUICKWAI_PORT) || 38457;
@@ -406,9 +406,8 @@ async function onReplyHotkey(id) {
   const reply = db.replies.find((r) => r.id === id);
   if (!reply) return;
   const target = await askHelper('fg');
-  const { name } = status();
-  if (needsName(reply.text) && !name) return openPanel({ askFor: id, target });
-  useReply(id, name, null, target);
+  // A missing name never blocks the paste; fillName drops the field.
+  useReply(id, status().name, null, target);
 }
 
 // Reply hotkeys are live only while the LINE OA chat tab has focus, so they do not take keys from other apps.
@@ -431,7 +430,7 @@ function syncHotkeys() {
 
 function syncPanelHotkey() {
   globalShortcut.unregister(PANEL_HOTKEY);
-  if (!paused && !locked) globalShortcut.register(PANEL_HOTKEY, () => openPanel({}));
+  if (!paused && !locked) globalShortcut.register(PANEL_HOTKEY, () => openPanel());
 }
 
 // ---- windows -------------------------------------------------------------
@@ -459,14 +458,14 @@ function createPanel() {
   });
 }
 
-async function openPanel({ askFor, target }) {
+async function openPanel() {
   if (locked) return;
   if (panel.isVisible()) return panel.hide();
-  panelTarget = target || (await askHelper('fg'));
+  panelTarget = await askHelper('fg');
   const area = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea;
   const [width, height] = panel.getSize();
   panel.setPosition(Math.round(area.x + (area.width - width) / 2), Math.round(area.y + (area.height - height) / 3));
-  panel.webContents.send('panel:open', { status: status(), replies: repliesForUi(), askFor: askFor || null });
+  panel.webContents.send('panel:open', { status: status(), replies: repliesForUi() });
   panel.show();
   panel.focus();
 }
@@ -488,7 +487,7 @@ function updateTray(current) {
     { label: `Extension: ${current.extConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}`, enabled: false },
     { type: 'separator' },
     { label: 'เปิด QuickWai', click: showMainWindow },
-    { label: 'ค้นหาด่วน', click: () => openPanel({}) },
+    { label: 'ค้นหาด่วน', click: () => openPanel() },
     { label: 'หยุด Hotkey ชั่วคราว', type: 'checkbox', checked: current.paused, click: (item) => setPaused(item.checked) },
     { type: 'separator' },
     { label: 'ออกจากโปรแกรม', click: quit },

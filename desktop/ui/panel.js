@@ -1,4 +1,4 @@
-const { searchReplies, needsName, hotkeyLabel } = QRShared;
+const { searchReplies, hotkeyLabel } = QRShared;
 const $ = (id) => document.getElementById(id);
 
 let replies = [];
@@ -19,14 +19,12 @@ const fileUrl = (filePath) => 'file:///' + encodeURI(filePath.replace(/\\/g, '/'
 
 const HINTS = {
   list: 'Enter วาง · Shift + Enter เลือกรูป · Ctrl + 1-9 เลือกเลย · Esc ปิด',
-  name: 'Enter วาง · Esc ยกเลิก',
   image: 'กดเลข 1-9 เลือกหรือเอาออก · Enter วาง · Esc ยกเลิก',
 };
 
 function show(next) {
   step = next;
   $('pq').hidden = $('plist').hidden = next !== 'list';
-  $('nameStep').hidden = next !== 'name';
   $('imageStep').hidden = next !== 'image';
   $('hint').textContent = HINTS[next];
 }
@@ -35,7 +33,7 @@ function renderBanner(status) {
   const banner = $('banner');
   if (!status.extConnected) {
     banner.className = 'banner off';
-    banner.textContent = 'Extension ไม่ได้เชื่อมต่อ ต้องพิมพ์ชื่อเอง';
+    banner.textContent = 'Extension ไม่ได้เชื่อมต่อ ข้อความจะไม่มีชื่อลูกค้า';
   } else if (status.name) {
     banner.className = status.tag === 'none' ? 'banner warn' : 'banner ok';
     banner.textContent = `ลูกค้า: ${status.name}` + (status.tag === 'none' ? ' · ยังไม่ใส่แท็ก' : '');
@@ -65,17 +63,6 @@ function renderList() {
 function choose(reply, withImagePick) {
   chosen = reply;
   pickImages = withImagePick && reply.images.length > 1;
-  if (needsName(reply.text) && !name) {
-    $('nameTitle').textContent = reply.name;
-    $('nameInput').value = '';
-    show('name');
-    $('nameInput').focus();
-    return;
-  }
-  afterName();
-}
-
-function afterName() {
   if (!pickImages) return finish(null);
   $('imageTitle').textContent = `${chosen.name}: เลือกรูปที่จะใช้`;
   $('imagePick').replaceChildren(...chosen.images.map((img) => el('label', { title: img.name },
@@ -90,11 +77,6 @@ function finish(imageIds) {
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') return qr.hidePanel();
-
-  if (step === 'name' && event.key === 'Enter') {
-    name = $('nameInput').value.trim();
-    return afterName();
-  }
 
   if (step === 'image') {
     const boxes = [...$('imagePick').querySelectorAll('input')];
@@ -121,7 +103,7 @@ document.addEventListener('keydown', (event) => {
 
 $('pq').oninput = () => { index = 0; renderList(); };
 
-qr.onPanelOpen(({ status, replies: list, askFor }) => {
+qr.onPanelOpen(({ status, replies: list }) => {
   replies = list;
   name = status.name;
   index = 0;
@@ -130,6 +112,4 @@ qr.onPanelOpen(({ status, replies: list, askFor }) => {
   show('list');
   renderList();
   $('pq').focus();
-  const direct = askFor && replies.find((r) => r.id === askFor);
-  if (direct) choose(direct, false);
 });
